@@ -75,8 +75,7 @@ def decode_predictions(scores, geometry):
 			confidences.append(scoresData[x])
 	return (rects, confidences)
 
-def detect(COUNTER,frame,size = (320,320)):
-	orig = frame.copy()
+def detect(frame,size = (320,320)):
 	(H, W) = frame.shape[:2]
 	rW = W / float(size[0])
 	rH = H / float(size[1])
@@ -88,9 +87,5 @@ def detect(COUNTER,frame,size = (320,320)):
 		endX = int(endX * rW)
 		endY = int(endY * rH)
 		boxes_out.append((startX, startY, endX, endY))
-
 	out = len(boxes) > 0
-
-	if out :
-		flip_image(COUNTER,orig)
 	return boxes_out,out

@@ -79,48 +79,38 @@ def alphanum_B(frame,size = (320,320)):
 	global CURRENT_TEXT
 	global CURRENT_RECTNAGLES
 	global CURRENT_COORDINATES
-	if WILL_BE_PROCESSED != 10:
-		WILL_BE_PROCESSED += 1
-		CURRENT_RECTNAGLES,result = Text_Detection.detect(OBJECT_COUNTER,frame,size)
-		if IS_ACTIVE and not result : # the video just finised detecting an object
-			#run easy ocr throught a system command
-			IS_ACTIVE = False
-		elif result and not IS_ACTIVE: #the video just detected a new object
-			IS_ACTIVE = True
-			CURRENT_TEXT = "Text recognition will begin now...."
-			threads.append(Text_recognition_thread(OBJECT_COUNTER,"Detector " + str(OBJECT_COUNTER),WHITE_LIST= WHITE_LIST))
-			threads[len(threads) - 1].start()
-		elif result and IS_ACTIVE:
-			CURRENT_TEXT = "Text recognition sequence initialized.... you can move on to the next object"
-	else:
-		WILL_BE_PROCESSED = 0
+	CURRENT_RECTNAGLES,result = Text_Detection.detect(frame,size)
+	if  result : # the video just finised detecting an object
+		print("Text recognition will begin now....")
+		Text_Detection.flip_image(OBJECT_COUNTER,frame)
+		Text_Recognition(OBJECT_COUNTER)
+		OBJECT_COUNTER += 1
 	cv2.putText(frame,CURRENT_TEXT,(0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(255,255,255),2)
 	for (startX, startY, endX, endY) in CURRENT_RECTNAGLES:
 		cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
 		cv2.putText(frame,boxes_tostring((startX, startY, endX, endY)),(startX,startY) ,cv2.FONT_HERSHEY_SIMPLEX, 0.5,(255,255,255),2)
-	
 	return frame
 
 def OCR_To_results(COUNTER):
-	global WHITE_LIST
-	ASCII = []
-	for i in range(0,255):
-		ASCII.append(0)
 	orientation_arr = [ "N","NW","W","SW","S","SE","E","NE"]
 	orientation = None
 	counter = 0
+	out_character = ""
+	out_confidence = 0
 	result = Recognize("results\\Object " + str(COUNTER))
 	for character,confidence in result:
-		if character in WHITE_LIST: 
-			ASCII[ord(character)] += confidence
+		if character in WHITE_LIST and confidence > out_confidence: 
+			out_character = character
+			out_confidence = confidence
 			if orientation == None:
 				orientation = orientation_arr[counter]
 			counter += 1
-	out  = chr(ASCII.index(max(ASCII)))
-	return out,orientation
+	return ((out_character,orientation,out_confidence * 100) if out_character != None else ("","N/A",-1))
 
 def Text_Recognition(OBJECT_COUNTER):
 	RESULT.append((OCR_To_results(OBJECT_COUNTER),OBJECT_COUNTER))
+
+
 def boxes_tostring(boxes):
     	return ' : '.join(map(str,boxes))
 
@@ -133,24 +123,10 @@ def exit_handler():
 atexit.register(exit_handler)
 
 if __name__ == '__main__':
-	vid = cv2.VideoCapture(0)
-	
-	while(True):
-		
-		# Capture the video frame
-		# by frame
-		ret, frame = vid.read()
-		frame = cv2.flip(frame,1)
-		result = alphanum_B(frame=frame)
-		# Display the resulting frame
-		cv2.imshow('frame', result)
-		# the 'q' button is set as the
-		# quitting button you may use any
-		# desired button of your choice
-		if cv2.waitKey(1) & 0xFF == ord('q'):
-			break
-	
-	# After the loop release the cap object
-	vid.release()
-	# Destroy all the windows
-	cv2.destroyAllWindows()
+	images = []
+	for x in range(1,7):
+		images.append(cv2.imread("demo_image\\test" + str(x) +".jpg"))
+	for image in images:
+		alphanum_B(image)
+	for (letter,orientation,confidence),z in RESULT:
+		print("object number : " + str(z) + " , character : " + str(letter) + " , orientation : " + str(orientation) + " , confidence : " + str(confidence))

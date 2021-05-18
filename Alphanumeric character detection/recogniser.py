@@ -48,7 +48,7 @@ model = torch.nn.DataParallel(model).to(device)
 
 # load model
 print('loading pretrained model from %s' % opt.saved_model)
-model.load_state_dict(torch.load(opt.saved_model, map_location=device))
+model.load_state_dict(torch.load("saved_models\\" + opt.saved_model, map_location=device))
 
     # prepare data. two demo images from https://github.com/bgshih/crnn#run-demo
 AlignCollate_demo = AlignCollate(imgH=opt.imgH, imgW=opt.imgW, keep_ratio_with_pad=opt.PAD)
