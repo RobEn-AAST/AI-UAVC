@@ -77,23 +77,18 @@ def Recognize(objective_number):
             # For max length prediction
             length_for_pred = torch.IntTensor([opt.batch_max_length] * batch_size).to(device)
             text_for_pred = torch.LongTensor(batch_size, opt.batch_max_length + 1).fill_(0).to(device)
-
             if 'CTC' in opt.Prediction:
                 preds = model(image, text_for_pred)
-
                 # Select max probabilty (greedy decoding) then decode index to character
                 preds_size = torch.IntTensor([preds.size(1)] * batch_size)
                 _, preds_index = preds.max(2)
                 # preds_index = preds_index.view(-1)
                 preds_str = converter.decode(preds_index, preds_size)
-
             else:
                 preds = model(image, text_for_pred, is_train=False)
-
                 # select max probabilty (greedy decoding) then decode index to character
                 _, preds_index = preds.max(2)
                 preds_str = converter.decode(preds_index, length_for_pred)
-
             preds_prob = F.softmax(preds, dim=2)
             preds_max_prob, _ = preds_prob.max(dim=2)
             for pred, pred_max_prob in zip(preds_str, preds_max_prob):

@@ -42,8 +42,9 @@ import threading
 import Text_Detection
 import atexit
 from recogniser import Recognize
+import logging
 
-OBJECT_COUNTER = 0
+
 class Text_recognition_thread (threading.Thread):
 	def __init__(self,threadID, name,frames = None,WHITE_LIST = None):
 		threading.Thread.__init__(self)
@@ -60,35 +61,27 @@ class Text_recognition_thread (threading.Thread):
 		threadLock.release()
 
 
-IS_ACTIVE = False
+OBJECT_COUNTER = 1
 RESULT = []
 WHITE_LIST = ['A','B','C','c','D','E','F','G','H','I','J','K','k','L','l','M','m','N','O','o','P','p','Q','R','S','s','T','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9']
-CURRENT_RECTNAGLES = []
-CURRENT_TEXT = None
-CURRENT_COORDINATES = None
 WILL_BE_PROCESSED = 0
 threads = []
 threadLock = threading.Lock()
+logging.basicConfig(filename='logs.log',level= logging.INFO,format='%(levelname)s - %(message)s')
+
 
 def alphanum_B(frame,size = (320,320)):
-	global IS_ACTIVE
-	global WILL_BE_PROCESSED
 	global OBJECT_COUNTER
-	global threads
-	global WHITE_LIST
-	global CURRENT_TEXT
-	global CURRENT_RECTNAGLES
-	global CURRENT_COORDINATES
 	CURRENT_RECTNAGLES,result = Text_Detection.detect(frame,size)
-	if  result : # the video just finised detecting an object
-		print("Text recognition will begin now....")
+	if  result :
+		logging.info("Object " + str(OBJECT_COUNTER) + " has been detected.")
 		Text_Detection.flip_image(OBJECT_COUNTER,frame)
+		cv2.imwrite("images\\Object " + str(OBJECT_COUNTER) + ".jpg", frame)
+		logging.info("An image of object " + str(OBJECT_COUNTER) + " has been written to images\\Object " + str(OBJECT_COUNTER) + ".jpg")
 		Text_Recognition(OBJECT_COUNTER)
 		OBJECT_COUNTER += 1
-	cv2.putText(frame,CURRENT_TEXT,(0, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(255,255,255),2)
 	for (startX, startY, endX, endY) in CURRENT_RECTNAGLES:
 		cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
-		cv2.putText(frame,boxes_tostring((startX, startY, endX, endY)),(startX,startY) ,cv2.FONT_HERSHEY_SIMPLEX, 0.5,(255,255,255),2)
 	return frame
 
 def OCR_To_results(COUNTER):
@@ -105,14 +98,15 @@ def OCR_To_results(COUNTER):
 			if orientation == None:
 				orientation = orientation_arr[counter]
 			counter += 1
+	if out_character == None:
+		logging.warning("object " + str(COUNTER) + " has been detected but could not identify the character")
+	else:
+		logging.info("object " + str(COUNTER) + " contains the character " + out_character + " and is placed with orientation " + orientation + ", the confidence = " + str(out_confidence * 100))	
 	return ((out_character,orientation,out_confidence * 100) if out_character != None else ("","N/A",-1))
 
 def Text_Recognition(OBJECT_COUNTER):
 	RESULT.append((OCR_To_results(OBJECT_COUNTER),OBJECT_COUNTER))
-
-
-def boxes_tostring(boxes):
-    	return ' : '.join(map(str,boxes))
+	logging.info("Finished detecting object" + str(OBJECT_COUNTER))
 
 def exit_handler():
 	global threads

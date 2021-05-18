@@ -3,7 +3,8 @@ import numpy as np
 import imutils
 from imutils.object_detection import non_max_suppression
 import os
-
+import logging
+logging.basicConfig(filename='logs.log',level= logging.INFO,format='%(levelname)s - %(message)s')
 layerNames = [ "feature_fusion/Conv_7/Sigmoid","feature_fusion/concat_3" ]
 net = cv2.dnn.readNet("east_detection_model.pb")
 orientation = {
@@ -31,10 +32,13 @@ def flip_image(counter,image):
 		rotated = cv2.warpAffine(image, M, (width, height))
 		all_images.append(rotated)
 	os.mkdir("results\\Object " + str(counter))
+	logging.info("A directory for object " + str(counter) + " has been created")
 	namer = 0
 	for x in all_images:
 		cv2.imwrite("results\\Object " + str(counter) + "\\image " + str(namer) + ".jpg",x)
-		namer += 1	
+		namer += 1
+	logging.info("6 images have been written to the directory for object " + str(counter) + " .")
+	
 	return
 
 def detect_text(frame, size = (320,320)) :
