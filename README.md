@@ -4,16 +4,25 @@ The Egypt unmanned arial vehicle challange
 
 ### Shape detection using AI model
  - Samir
- - Wahdan
-
-### Shape detection using OpenCV
- - Doha
- - Emad
+ - mariam, safty, mohamed ali
 
 ### QR codes
- - Doha
- - Emad
+ - emad
 
 ### Alphanumeric 
  - Peter
- - Wahdan
+ - essam
+
+### serialize submitable data into json on disk (usb)
+ - nourhan
+ - omar tamer
+
+### serialize and send data to interop
+ - safty
+ - wahdan
+ - osama
+
+### capturing video data
+ - osama
+ - doha 
+
