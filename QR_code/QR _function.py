@@ -15,7 +15,7 @@ def checkQR(img):
     if len(qrList)>0:
         return True,qrList
     else:
-        return False
+        return False,qrList
 
 
 img = cv2.imread("test_desert2.jpg")
