@@ -35,6 +35,9 @@ This is a simple blackbox representation of the abstraction level we want to ach
  - Samir
  - mariam, safty, mohamed ali
 
+### Shape detection using OpenCV
+ - doha
+
 ### QR codes
  - emad
 
