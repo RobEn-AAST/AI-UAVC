@@ -6,7 +6,7 @@ from pyzbar.pyzbar import decode
 
 
 
-def QR(img):
+def checkQR(img):
     qrList = []
     for qrcode in decode(img):
         data = qrcode.data.decode('utf-8')
@@ -18,5 +18,5 @@ def QR(img):
         return False
 
 
-img = cv2.imread("test.jpg")
-print(QR(img))
+img = cv2.imread("test_desert2.jpg")
+print(checkQR(img))
