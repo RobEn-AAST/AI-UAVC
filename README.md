@@ -23,7 +23,9 @@ This is a simple blackbox representation of the abstraction level we want to ach
     submitables["alphanumeric"] = alphanumeric
 
     submitablesToJudge(submitables) # DevOps
-    submitablesToUSB(submitables) # Serialization
+    submitablesToUSB(submitables,count) # Serialization
+    # count for the times of running the function , increment the count
+    c = c + 1
 
     if result == "RR": # RR = Red Rectangel
      sendUAV(geotag) # MavLink
