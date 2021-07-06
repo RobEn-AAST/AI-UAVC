@@ -53,11 +53,11 @@ model.load_state_dict(torch.load("saved_models\\" + opt.saved_model, map_locatio
     # prepare data. two demo images from https://github.com/bgshih/crnn#run-demo
 AlignCollate_demo = AlignCollate(imgH=opt.imgH, imgW=opt.imgW, keep_ratio_with_pad=opt.PAD)
 
-def Recognize(objective_number):
+def Recognize(directory):
     global opt
     global model
     global AlignCollate_demo
-    opt.image_folder = objective_number
+    opt.image_folder = directory
 
     if opt.rgb:
         opt.input_channel = 3
@@ -99,5 +99,5 @@ def Recognize(objective_number):
                 # calculate confidence score (= multiply of pred_max_prob)
                 confidence_score = pred_max_prob.cumprod(dim=0)[-1]
                 results.append((pred,confidence_score))
-    return results
+    return results[0]
 
