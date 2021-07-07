@@ -52,13 +52,15 @@ while True:
 ### QR codes ❌
  - emad
 
-### Alphanumeric 
+### Alphanumeric
+split the model into 2 functions that load the model at first and predict when needed
  - kohel
  - essam
  - nourhan
  - omar
 
-### serialize submitable data into json on disk (usb) ❌
+### serialize submitable data into json on disk (usb)
+return string of locations
  - nourhan
  - omar tamer
 

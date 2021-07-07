@@ -55,7 +55,6 @@ model.load_state_dict(torch.load("saved_models/" + opt.saved_model, map_location
 AlignCollate_demo = AlignCollate(imgH=opt.imgH, imgW=opt.imgW, keep_ratio_with_pad=opt.PAD)
 
 def Recognize(directory):
-    print(time.perf_counter())
     global opt
     global model
     global AlignCollate_demo
@@ -72,10 +71,8 @@ def Recognize(directory):
     results = []
     # predict
     model.eval()
-    print(time.perf_counter())
     with torch.no_grad():
         for image_tensors, image_path_list in demo_loader:
-            print(time.perf_counter())
             batch_size = image_tensors.size(0)
             image = image_tensors.to(device)
             # For max length prediction
@@ -103,6 +100,5 @@ def Recognize(directory):
                 # calculate confidence score (= multiply of pred_max_prob)
                 confidence_score = pred_max_prob.cumprod(dim=0)[-1]
                 results.append((pred,confidence_score))
-                print(time.perf_counter())
     return results
 

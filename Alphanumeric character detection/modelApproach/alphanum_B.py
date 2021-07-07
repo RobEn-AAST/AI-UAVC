@@ -63,5 +63,7 @@ def alphanum_B(image, id):
 if __name__ == '__main__':
 	image  = cv2.imread("test.jpg")
 	
+	timer = time.perf_counter()
 	character = alphanum_B(image, 1)
+	print(time.perf_counter()-timer)
 	print(character)
