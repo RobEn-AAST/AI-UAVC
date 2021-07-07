@@ -53,3 +53,8 @@ import alphanum_B
 </li>
 <li>Testing the final code on a platform that has a graphical proccessing unit ( GPU ).</li>
 </ul>
+
+
+install torch :
+
+conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch
