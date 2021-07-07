@@ -18,12 +18,13 @@ def checkQR(img):
     else:
         return False,qrList
 
-#here I load the image
-img = cv2.imread("test_desert5.jpg")
+print("loaded")
+# #here I load the image
+# img = cv2.imread("test_desert5.jpg")
 
-# Here I added a sharpenening effect to better detect the qr code
-kernel = np.array([[-1, -1, -1],[-1, 8, -1],[-1, -1, 0]], np.float32) 
-kernel = 1/2 * kernel
-sharp = cv2.filter2D(img, -1, kernel)
-#here I just check the results
-print(checkQR(sharp))
+# # Here I added a sharpenening effect to better detect the qr code
+# kernel = np.array([[-1, -1, -1],[-1, 8, -1],[-1, -1, 0]], np.float32) 
+# kernel = 1/2 * kernel
+# sharp = cv2.filter2D(img, -1, kernel)
+# #here I just check the results
+# print(checkQR(sharp))

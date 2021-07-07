@@ -3,16 +3,17 @@ import json
 from PIL import Image
 import cv2
 
-img = cv2.imread("/test.pngQR_code")
+# img = cv2.imread("/test.pngQR_code")
 
-c=1
-submitablesImg = {
-    "img": img, "alphanumeric": "A" , "geotag" : "xxx" , "color" : "red"
-}
-submitablesQR = {
-    "QRimg": img, "QRvalue": "xxxxx", "geotag" : "xxxx"
-}
-def writeFile(submitables,c) :
+# c=1
+# submitablesImg = {
+#     "img": img, "alphanumeric": "A" , "geotag" : "xxx" , "color" : "red"
+# }
+# submitablesQR = {
+#     "QRimg": img, "QRvalue": "xxxxx", "geotag" : "xxxx"
+# }
+
+def submitablesToUSB(submitables,c) :
     if "QRimg" in submitables:
         
         jsonString = json.dumps(submitables)
@@ -34,7 +35,7 @@ def writeFile(submitables,c) :
     
         img = Image.open("QR_code/test.png",'r')
         img.save(f'WriteJsonOnDisk/Image/{c}.png', 'PNG')
-while c!=4 :
-    writeFile(submitablesImg,c)
-    c =  c+1
+# while c!=4 :
+#     submitablesToUSB(submitablesImg,c)
+#     c =  c+1
 
