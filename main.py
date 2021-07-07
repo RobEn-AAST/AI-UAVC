@@ -6,9 +6,9 @@ This is the base plate code for the main file
 
 # import any needed libs like so
 from QR_code.QR_function import checkQR
-from WriteJsonOnDisk.jsonFile import submitablesToUSB
+from WriteJsonOnDisk.jsonFile import submitToUSB
 
-submitables = {}
+mission = {}
 detectedCount = 0
 
 while True:
@@ -18,9 +18,9 @@ while True:
 
     if qrPresent:
         # place values in dict (could be cleaner but leave it for now)
-        submitables["QRimg"] = img
-        submitables["geotag"] = geotag
-        submitables["QRValue"] = value
+        mission["QRimg"] = img
+        mission["geotag"] = geotag
+        mission["QRValue"] = value
     else:
         result, location, found = detectShape(img) # AI
         if found:
@@ -28,12 +28,12 @@ while True:
             alphanumeric = getAlphaNumeric(img) # alphanumeric detection
 
             # place values in dict (could be cleaner but leave it for now)
-            submitables["img"] = img
-            submitables["geotag"] = geotag
-            submitables["alphanumeric"] = alphanumeric
+            mission["img"] = img
+            mission["geotag"] = geotag
+            mission["alphanumeric"] = alphanumeric
 
-            submitablesToJudge(submitables, detectedCount) # DevOps
-            submitablesToUSB(submitables, detectedCount) # Serialization
+            submitToJudge(mission, detectedCount) # DevOps
+            submitToUSB(mission, detectedCount) # Serialization
             # count for the times of running the function , increment the count
 
             if result == "RR": # RR = Red Rectangel

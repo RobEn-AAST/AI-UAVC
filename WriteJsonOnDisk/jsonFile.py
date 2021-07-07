@@ -13,7 +13,7 @@ import cv2
 #     "QRimg": img, "QRvalue": "xxxxx", "geotag" : "xxxx"
 # }
 
-def submitablesToUSB(submitables,c) :
+def submitToUSB(submitables,c) :
     if "QRimg" in submitables:
         
         jsonString = json.dumps(submitables)
