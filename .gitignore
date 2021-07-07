@@ -132,3 +132,4 @@ dmypy.json
 # CUSTOM 
 
 .DS_Store
+*settings*
