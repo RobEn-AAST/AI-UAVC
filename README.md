@@ -49,14 +49,16 @@ while True:
 ### Shape detection using OpenCV
  - doha
 
-### QR codes
+### QR codes ❌
  - emad
 
 ### Alphanumeric 
- - Peter
+ - kohel
  - essam
+ - nourhan
+ - omar
 
-### serialize submitable data into json on disk (usb)
+### serialize submitable data into json on disk (usb) ❌
  - nourhan
  - omar tamer
 
@@ -65,7 +67,5 @@ while True:
  - wahdan
  - osama
 
-### capturing video data
+### capturing video data for training ❌
  - osama
- - doha 
-
