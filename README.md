@@ -5,30 +5,39 @@ The Egypt unmanned arial vehicle challange
 ### Goal program
 This is a simple blackbox representation of the abstraction level we want to achieve
 ```python
- submitables = {}
+from QR_code.QR_function import checkQR
+from WriteJsonOnDisk.jsonFile import submitablesToUSB
 
- while True:
-  # every 0.5 sec we will =>
-  img, geotag = recieve() # DevOps
-  qrPresent, value = checkQR(img) # QRCode
-  if qrPresent:
-   submitables["img"] = img
-   submitables["geotag"] = geotag
-   submitables["QRValue"] = value
-  else:
-   result, location, found = detectShape(img) # AI
-   if found:
-    alphanumeric = detectnumeric(img) # alphanumeric detection
-    submitables["img"] = img
-    submitables["alphanumeric"] = alphanumeric
+submitables = {}
+detectedCount = 0
 
-    submitablesToJudge(submitables) # DevOps
-    submitablesToUSB(submitables,count) # Serialization
-    # count for the times of running the function , increment the count
-    count = count + 1
+while True:
+    # every {0.5} sec we will =>
+    img, geotag = recieveMission() # Recieve image and geotag from UAV
+    qrPresent, value = checkQR(img) # check if there is a QR code in the image and return value if so
 
-    if result == "RR": # RR = Red Rectangel
-     sendUAV(geotag) # MavLink
+    if qrPresent:
+        # place values in dict (could be cleaner but leave it for now)
+        submitables["QRimg"] = img
+        submitables["geotag"] = geotag
+        submitables["QRValue"] = value
+    else:
+        result, location, found = detectShape(img) # AI
+        if found:
+            detectedCount = detectedCount + 1
+            alphanumeric = getAlphaNumeric(img) # alphanumeric detection
+
+            # place values in dict (could be cleaner but leave it for now)
+            submitables["img"] = img
+            submitables["geotag"] = geotag
+            submitables["alphanumeric"] = alphanumeric
+
+            submitablesToJudge(submitables, detectedCount) # DevOps
+            submitablesToUSB(submitables, detectedCount) # Serialization
+            # count for the times of running the function , increment the count
+
+            if result == "RR": # RR = Red Rectangel
+                sendUAV(geotag) # MavLink
 ```
 
 
