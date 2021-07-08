@@ -41,6 +41,7 @@ while True:
 ```
 
 
+## Missions
 
 ### Shape detection using AI model
  - Samir
@@ -49,7 +50,7 @@ while True:
 ### Shape detection using OpenCV
  - doha
 
-### QR codes ❌
+### QR codes (Testing)
  - emad
 
 ### Alphanumeric
@@ -59,7 +60,7 @@ split the model into 2 functions that load the model at first and predict when n
  - nourhan
  - omar
 
-### serialize submitable data into json on disk (usb)
+### serialize submitable data into json on disk
 return string of locations
  - nourhan
  - omar tamer
