@@ -39,7 +39,6 @@ Algorithm :-
 '''
 from cv2 import cv2
 from recogniser import Recognize
-import logging
 from os import remove
 import time
 
@@ -51,11 +50,9 @@ def alphanum_B(image, id):
 	out_confidence = 0
 	out_character = Recognize("results/")
 	if out_character is None or out_character == '' :
-		#logging.warning("An object has been detected but could not identify the character")
 		return None,None,None
 	else:
 		pass
-		#logging.info("object contains the character " + out_character + ", the confidence = " + str(out_confidence * 100))	
 	remove("results/" + str(id)  + ".jpg")
 	return out_character
 
