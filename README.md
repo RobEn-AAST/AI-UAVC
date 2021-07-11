@@ -53,7 +53,7 @@ while True:
 ### QR codes (Testing)
  - emad
 
-### Alphanumeric
+### Alphanumeric (Testing)
 split the model into 2 functions that load the model at first and predict when needed
  - kohel
  - essam
@@ -68,6 +68,10 @@ return string of locations
 ### serialize and send data to interop
  - safty
  - wahdan
+ - osama
+
+### GeoCheck
+check if the new given geotag is in radius of a previus detected object to prevent re-submission of same object
  - osama
 
 ### capturing video data for training ❌
