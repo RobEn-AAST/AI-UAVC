@@ -62,7 +62,7 @@ split the model into 2 functions that load the model at first and predict when n
 
 ### serialize submitable data into json on disk
 return string of locations
- - nourhan
+ - doha
  - omar tamer
 
 ### serialize and send data to interop
