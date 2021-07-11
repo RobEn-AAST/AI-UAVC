@@ -41,6 +41,7 @@ from cv2 import cv2
 from recogniser import Recognize
 from os import remove
 import time
+import numpy as np
 
 WHITE_LIST = ['A','B','C','c','D','E','F','G','H','I','J','K','k','L','l','M','m','N','O','o','P','p','Q','R','S','s','T','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9']
 
@@ -57,10 +58,31 @@ def alphanum_B(image, id):
 	return out_character
 
 
+def getAlphaNumeric(imagefile):
+	# image = cv2.imread(imagefile)
+	lower_white = np.array([0,0,0], dtype=np.uint8)
+	upper_white = np.array([200,100,255], dtype=np.uint8)
+
+	mask = cv2.inRange(image,lower_white,upper_white)
+	
+	scale =80
+	width = int(image.shape[1] *scale/100)
+	height = int (image.shape[0]*scale/100)
+	dim =(width,height)
+
+	resized_mask = cv2.resize(mask, dim, interpolation = cv2.INTER_AREA)
+
+	cv2.imshow("Hey",image)
+	cv2.imshow("mask",mask)
+	cv2.imshow('resied',resized_mask)
+  
+	cv2.waitKey(0)
+	return alphanum_B(resized_mask, 1)
+
 if __name__ == '__main__':
-	image  = cv2.imread("test.jpg")
+	image  = cv2.imread("testR2.jpg")
 	
 	timer = time.perf_counter()
-	character = alphanum_B(image, 1)
+	character = getAlphaNumeric(image)
 	print(time.perf_counter()-timer)
 	print(character)
