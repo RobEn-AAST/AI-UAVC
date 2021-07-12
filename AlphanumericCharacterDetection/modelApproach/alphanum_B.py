@@ -42,6 +42,8 @@ from recogniser import Recognize
 from os import remove
 import time
 import numpy as np
+from PIL import Image
+# from getAlphaNumeric import getAlphaNumeric
 
 WHITE_LIST = ['A','B','C','c','D','E','F','G','H','I','J','K','k','L','l','M','m','N','O','o','P','p','Q','R','S','s','T','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9']
 
@@ -59,28 +61,35 @@ def alphanum_B(image, id):
 
 
 def getAlphaNumeric(imagefile):
-	# image = cv2.imread(imagefile)
+	
+	# crop image
+	height =imagefile.shape[0]
+	width =imagefile.shape[1]
+	height_to_crop = int(height * (20/100))
+	width_to_crop = int(width * (20/100))
+	x_border = height -(height_to_crop*2)
+	y_border = width -( width_to_crop*2)
+	cropped_image = imagefile[ height_to_crop : height_to_crop+ (x_border),
+	                          width_to_crop: width_to_crop+ ( y_border) ]
+
+
+	
 	lower_white = np.array([0,0,0], dtype=np.uint8)
 	upper_white = np.array([200,100,255], dtype=np.uint8)
 
-	mask = cv2.inRange(image,lower_white,upper_white)
-	
-	scale =80
-	width = int(image.shape[1] *scale/100)
-	height = int (image.shape[0]*scale/100)
-	dim =(width,height)
+	mask = cv2.inRange(cropped_image,lower_white,upper_white)
 
-	resized_mask = cv2.resize(mask, dim, interpolation = cv2.INTER_AREA)
 
 	cv2.imshow("Hey",image)
+	cv2.imshow("crop",cropped_image)
 	cv2.imshow("mask",mask)
-	cv2.imshow('resied',resized_mask)
-  
+	
 	cv2.waitKey(0)
-	return alphanum_B(resized_mask, 1)
+	return alphanum_B(mask, 1)
 
 if __name__ == '__main__':
-	image  = cv2.imread("testR2.jpg")
+	image  = cv2.imread("Sample4.jpg")
+	
 	
 	timer = time.perf_counter()
 	character = getAlphaNumeric(image)
