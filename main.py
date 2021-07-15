@@ -24,6 +24,8 @@ while True:
     else:
         result, location, found = detectShape(img) # AI
         if found:
+            if repeatedTarget(geotag):
+                break
             detectedCount = detectedCount + 1
             alphanumeric = getAlphaNumeric(img) # alphanumeric detection
 
