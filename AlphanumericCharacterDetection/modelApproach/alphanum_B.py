@@ -39,9 +39,10 @@ Algorithm :-
 '''
 from cv2 import cv2
 from recogniser import Recognize
-import logging
 from os import remove
 import time
+import numpy as np
+import getAlphaNumeric
 
 WHITE_LIST = ['A','B','C','c','D','E','F','G','H','I','J','K','k','L','l','M','m','N','O','o','P','p','Q','R','S','s','T','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9']
 
@@ -51,19 +52,18 @@ def alphanum_B(image, id):
 	out_confidence = 0
 	out_character = Recognize("results/")
 	if out_character is None or out_character == '' :
-		#logging.warning("An object has been detected but could not identify the character")
 		return None,None,None
 	else:
 		pass
-		#logging.info("object contains the character " + out_character + ", the confidence = " + str(out_confidence * 100))	
 	remove("results/" + str(id)  + ".jpg")
 	return out_character
 
 
+
 if __name__ == '__main__':
-	image  = cv2.imread("test.jpg")
-	
+	image  = cv2.imread("Sample10.jpg")
+
 	timer = time.perf_counter()
-	character = alphanum_B(image, 1)
+	character = getAlphaNumeric.getAlphaNumeric(image)
 	print(time.perf_counter()-timer)
 	print(character)

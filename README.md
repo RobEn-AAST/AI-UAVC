@@ -41,6 +41,7 @@ while True:
 ```
 
 
+## Missions
 
 ### Shape detection using AI model
  - Samir
@@ -49,24 +50,28 @@ while True:
 ### Shape detection using OpenCV
  - doha
 
-### QR codes ❌
+### QR codes (Testing)
  - emad
 
-### Alphanumeric
+### Alphanumeric (Testing)
 split the model into 2 functions that load the model at first and predict when needed
  - kohel
  - essam
  - nourhan
  - omar
 
-### serialize submitable data into json on disk (usb)
+### serialize submitable data into json on disk
 return string of locations
- - nourhan
+ - doha
  - omar tamer
 
 ### serialize and send data to interop
  - safty
  - wahdan
+ - osama
+
+### GeoCheck
+check if the new given geotag is in radius of a previus detected object to prevent re-submission of same object
  - osama
 
 ### capturing video data for training ❌

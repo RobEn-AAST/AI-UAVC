@@ -34,8 +34,8 @@ while True:
             mission["geotag"] = geotag
             mission["alphanumeric"] = alphanumeric
 
-            submitToJudge(mission, detectedCount) # DevOps
-            submitToUSB(mission, detectedCount) # Serialization
+            jsonLocation = submitToUSB(mission, detectedCount) # Serialization
+            submitToJudge(jsonLocation) # DevOps
             # count for the times of running the function , increment the count
 
             if result == "RR": # RR = Red Rectangel

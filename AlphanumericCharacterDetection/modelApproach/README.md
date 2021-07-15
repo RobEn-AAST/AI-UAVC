@@ -1,5 +1,18 @@
 <h1 align="center"> Alphanumeric character classification (Model - B)</h1>
 
+## simple steps:
+
+install torch :
+
+ - `conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch`
+ - pip install the rest of the requirements manually
+ - create folder saved_models
+ - install model [from here](https://drive.google.com/open?id=1ajONZOgiG9pEYsQ-eBmgkVbMDuHgPCaY) and place it in saved_models folder
+ - create folder results
+ - run with test image in same folder
+
+
+
 ### Over View :- 
 
     Alphanumeric character classification using easy-ocr.
@@ -53,8 +66,3 @@ import alphanum_B
 </li>
 <li>Testing the final code on a platform that has a graphical proccessing unit ( GPU ).</li>
 </ul>
-
-
-install torch :
-
-conda install pytorch==1.2.0 torchvision==0.4.0 cpuonly -c pytorch
