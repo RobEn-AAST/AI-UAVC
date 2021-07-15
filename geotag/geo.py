@@ -9,7 +9,7 @@ def geo_d(geo):
       geos = json.load(f)
       print(geos["geos"])
       for i in range(len(geos)):
-         if geos["geos"][i] == geo:
+         if geos["geos"][i] == geo: # calculate distance avbout 20 metetr from the geolocation
             return False
          else:
             with open(path+'/geotags.json','w') as f:
