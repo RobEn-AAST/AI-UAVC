@@ -8,6 +8,7 @@ This is the base plate code for the main file
 from QR_code.QR_function import checkQR
 from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
+from AlphanumericCharacterDetection.getAlphaNumeric import getAlphaNumeric
 
 mission = {}
 detectedCount = 0
