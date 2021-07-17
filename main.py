@@ -17,21 +17,21 @@ while True:
     # every {0.5} sec we will =>
     img, geotag = recieveMission() # Recieve image and geotag(long, lat) from UAV 
     qrPresent, value = checkQR(img) # check if there is a QR code in the image and return value if so
+    mission["longitude"], mission["latitude"] = geotag
 
     if qrPresent:
         mission["QRimg"] = img
         mission["type"] = "QR-code"
-        mission["longitude"], mission["latitude"] = geotag
         mission["value"] = value
     else:
         result, location, found = detectShape(img) # AI
         if found and (not repeatedTarget(geotag)):
             detectedCount = detectedCount + 1
+            mission["type"] = result # enemy or allie (as string)
             alphanumeric = getAlphaNumeric(img) # alphanumeric detection
 
             # place values in dict (could be cleaner but leave it for now)
             mission["img"] = img
-            mission["geotag"] = geotag
             mission["alphanumeric"] = alphanumeric
 
             jsonLocation = submitToUSB(mission, detectedCount) # Serialization
