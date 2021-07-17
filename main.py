@@ -7,6 +7,7 @@ This is the base plate code for the main file
 # import any needed libs like so
 from QR_code.QR_function import checkQR
 from WriteJsonOnDisk.jsonFile import submitToUSB
+from geotag.geo import repeatedTarget
 
 mission = {}
 detectedCount = 0
@@ -20,12 +21,10 @@ while True:
         mission["QRimg"] = img
         mission["type"] = "QR-code"
         mission["longitude"], mission["latitude"] = geotag
-        mission["QRValue"] = value
+        mission["value"] = value
     else:
         result, location, found = detectShape(img) # AI
-        if found:
-            if repeatedTarget(geotag):
-                break
+        if found and (not repeatedTarget(geotag)):
             detectedCount = detectedCount + 1
             alphanumeric = getAlphaNumeric(img) # alphanumeric detection
 
