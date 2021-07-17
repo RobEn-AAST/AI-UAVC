@@ -13,13 +13,13 @@ detectedCount = 0
 
 while True:
     # every {0.5} sec we will =>
-    img, geotag = recieveMission() # Recieve image and geotag from UAV
+    img, geotag = recieveMission() # Recieve image and geotag (long, lat)from UAV 
     qrPresent, value = checkQR(img) # check if there is a QR code in the image and return value if so
 
     if qrPresent:
-        # place values in dict (could be cleaner but leave it for now)
         mission["QRimg"] = img
-        mission["geotag"] = geotag
+        mission["type"] = "QR-code"
+        mission["longitude"], mission["latitude"] = geotag
         mission["QRValue"] = value
     else:
         result, location, found = detectShape(img) # AI
