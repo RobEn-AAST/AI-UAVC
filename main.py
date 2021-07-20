@@ -24,7 +24,7 @@ while True:
         mission["type"] = "QR-code"
         mission["value"] = value
     else:
-        result, location, found = detectShape(img) # AI
+        result, location, found = detectShape(img) # AI returns ("Enemy", (lat, long), true)
         if found and (not repeatedTarget(geotag)):
             detectedCount = detectedCount + 1
             mission["type"] = result # enemy or allie (as string)

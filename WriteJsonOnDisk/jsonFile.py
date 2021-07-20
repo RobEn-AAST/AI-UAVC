@@ -13,6 +13,11 @@ import cv2
 #     "QRimg": img, "QRvalue": "xxxxx", "geotag" : "xxxx"
 # }
 
+# TODO
+#   - change path to relative depending on this file locatoins
+#   - return the path of each deliverable made with it's name
+#
+
 def submitToUSB(submitables,c) :
     if "QRimg" in submitables:
         
