@@ -1,8 +1,8 @@
-<h1 align="center"> UAV Client module</h1>
+<h1 align="center"> UAV Server module</h1>
 
 
 ## Over View :
-A Module for data exchange between client, server
+A Module for data exchange between with the client
 
 #### prequsites :-
 - open cv
