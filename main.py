@@ -9,13 +9,17 @@ from QR_code.QR_function import checkQR
 from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
 from AlphanumericCharacterDetection.getAlphaNumeric import getAlphaNumeric
+from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
 
+server = UAV_SERVER()
 mission = {}
 detectedCount = 0
+terminate = True
 
-while True:
+
+while terminate:
     # every {0.5} sec we will =>
-    img, geotag = recieveMission() # Recieve image and geotag(long, lat) from UAV 
+    terminate, geotag, img = server.receiveMissions() # Receive image and geotag(long, lat) from UAV 
     qrPresent, value = checkQR(img) # check if there is a QR code in the image and return value if so
     mission["longitude"], mission["latitude"] = geotag
 
