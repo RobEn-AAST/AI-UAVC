@@ -1,0 +1,10 @@
+LatLon
+future=0.18.2
+futures=3.1.1
+lxml
+nose
+protobuf>=3.2
+pymavlink==2.4.14
+pyserial
+requests
+opencv-contrib-python=4.5.3.56

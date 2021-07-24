@@ -1,0 +1,12 @@
+{
+    "alphanumeric": "A",
+    "alphanumeric_color": "ORANGE",
+    "autonomous": false,
+    "latitude": 30.592811944444442,
+    "longitude": 75.81308972222222,
+    "mission": 1,
+    "orientation": "N",
+    "shape": "RECTANGLE",
+    "shape_color": "RED",
+    "type": "STANDARD"
+}

@@ -1,0 +1,10 @@
+{
+    "alphanumeric": "F",
+    "alphanumeric_color": "WHITE",
+    "autonomous": false,
+    "orientation": "E",
+    "mission": 1,
+    "shape": "TRIANGLE",
+    "shape_color": "GREEN",
+    "type": "STANDARD"
+}

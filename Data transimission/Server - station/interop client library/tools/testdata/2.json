@@ -1,0 +1,13 @@
+{
+    "alphanumeric": "4",
+    "alphanumeric_color": "YELLOW",
+    "autonomous": false,
+    "description": "Actionable Intel",
+    "latitude": -34.00342916666666,
+    "longitude": -2.0200958333333334,
+    "orientation": "SE",
+    "mission": 1,
+    "shape": "SQUARE",
+    "shape_color": "ORANGE",
+    "type": "STANDARD"
+}
