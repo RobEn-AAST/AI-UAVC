@@ -19,28 +19,29 @@ terminate = True
 
 while terminate:
     # every {0.5} sec we will =>
-    terminate, geotag, img = server.receiveMissions() # Receive image and geotag(long, lat) from UAV 
+    terminate, location, img = server.receiveMissions() # Receive image and geotag(long, lat) from UAV 
     qrPresent, value = checkQR(img) # check if there is a QR code in the image and return value if so
-    mission["longitude"], mission["latitude"] = geotag
+    mission["latitude"], mission["longitude"] = location # osama to get long and lat lowa7dohom
 
     if qrPresent:
         mission["QRimg"] = img
         mission["type"] = "QR-code"
         mission["value"] = value
     else:
-        result, location, found = detectShape(img) # AI returns ("Enemy", (lat, long), true)
-        if found and (not repeatedTarget(geotag)):
+        result, boundRect, found = detectShape(img) # AI returns ("Enemy", (lat, long), true) (crops image to bounding rect)
+        if found and (not repeatedTarget(boundRect)):
             detectedCount = detectedCount + 1
+            cropedTarget = cropToRect(img)
             mission["type"] = result # enemy or allie (as string)
-            alphanumeric = getAlphaNumeric(img) # alphanumeric detection
+            mission["alphanumeric"] = getAlphaNumeric(cropedTarget) # alphanumeric detection
 
             # place values in dict (could be cleaner but leave it for now)
-            mission["img"] = img
-            mission["alphanumeric"] = alphanumeric
+            mission["img"] = cropedTarget
+            mission["originalImage"] = img
 
             jsonLocation = submitToUSB(mission, detectedCount) # Serialization
             submitToJudge(jsonLocation) # DevOps
             # count for the times of running the function , increment the count
 
-            if result == "RR": # RR = Red Rectangel
-                sendUAV(geotag) # MavLink
+            if result == "Friend": # RR = Red Rectangel
+                sendUAV(location) # MavLink

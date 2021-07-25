@@ -73,3 +73,25 @@ check if the new given geotag is in radius of a previus detected object to preve
 
 ### capturing video data for training ❌
  - osama
+
+### location format on pi
+
+```python
+import pymavlink
+import dronekit
+import cv2
+# mo7sen connect pymavlink
+
+######
+
+image = cv2.read()
+image = pymavlink.geotag(image)
+
+#####
+
+location = dronekit.location("raw")
+
+lat, long = location.split(",")
+
+lat, long
+```
