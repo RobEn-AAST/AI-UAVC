@@ -17,10 +17,7 @@ def getAlphaNumeric(imagefile):
 
 
 	
-	cv2.imshow("crop",cropped_image)
-	cv2.imshow("mask",mask)
 	
-	cv2.waitKey(0)
 	return AlphanumericCharacterDetection.alphanum_B.alphanum_B(mask, 1)
 
 def crop_image(imagefile):
