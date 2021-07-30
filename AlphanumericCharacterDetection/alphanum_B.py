@@ -38,24 +38,23 @@ Algorithm :-
 
 '''
 from cv2 import cv2
-from recogniser import Recognize
+from AlphanumericCharacterDetection.recogniser import Recognize
 from os import remove
 import time
 import numpy as np
-import getAlphaNumeric
 
 WHITE_LIST = ['A','B','C','c','D','E','F','G','H','I','J','K','k','L','l','M','m','N','O','o','P','p','Q','R','S','s','T','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9']
 
 def alphanum_B(image, id):
-	cv2.imwrite("results/" + str(id) + ".jpg", image)
+	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + ".jpg", image)
 	out_character = ""
 	out_confidence = 0
-	out_character = Recognize("results/")
+	out_character = Recognize("AlphanumericCharacterDetection/results/")
 	if out_character is None or out_character == '' :
 		return None,None,None
 	else:
 		pass
-	remove("results/" + str(id)  + ".jpg")
+	remove("AlphanumericCharacterDetection/results/" + str(id)  + ".jpg")
 	return out_character
 
 
@@ -64,6 +63,6 @@ if __name__ == '__main__':
 	image  = cv2.imread("Sample10.jpg")
 
 	timer = time.perf_counter()
-	character = getAlphaNumeric.getAlphaNumeric(image)
+	character = alphanum_B(image, 1)
 	print(time.perf_counter()-timer)
 	print(character)
