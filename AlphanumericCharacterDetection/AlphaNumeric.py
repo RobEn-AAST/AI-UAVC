@@ -1,6 +1,7 @@
+import time
 import cv2
 import numpy as  np
-from alphanum_B import alphanum_B
+import AlphanumericCharacterDetection.alphanum_B
 
 
 def getAlphaNumeric(imagefile):
@@ -20,7 +21,7 @@ def getAlphaNumeric(imagefile):
 	cv2.imshow("mask",mask)
 	
 	cv2.waitKey(0)
-	return alphanum_B(mask, 1)
+	return AlphanumericCharacterDetection.alphanum_B.alphanum_B(mask, 1)
 
 def crop_image(imagefile):
 	height =imagefile.shape[0]
@@ -33,3 +34,11 @@ def crop_image(imagefile):
 	                          width_to_crop: width_to_crop+ ( y_border) ]
 
     	
+
+if __name__ == '__main__':
+	image  = cv2.imread("Sample10.jpg")
+
+	timer = time.perf_counter()
+	character = alphanum_B.alphanum_B(image, 1)
+	print(time.perf_counter()-timer)
+	print(character)
