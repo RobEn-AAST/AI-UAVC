@@ -3,28 +3,32 @@ from geotag.geo import repeatedTarget
 import AlphanumericCharacterDetection.AlphaNumeric
 from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
 
+
 server = UAV_SERVER()
+# load model
 mission = {}
 detectedCount = 0
 terminate = True
 
 while terminate:
-    terminate, location, img = server.receiveMissions()
-    mission["latitude"], mission["longitude"] = location # osama to get long and lat lowa7dohom TODO: get lat and long alone
+    terminate, location, img = server.receiveMissions() # TODO: set up location on pi too
+    mission["latitude"], mission["longitude"] = location
 
-    result, boundRect, found = detectShape(img) # AI returns ("Foe", (lat, long), true) (crops image to bounding rect) TODO: wrap the AI 
+    objType, imageResult, croppedTarget, found = detectShape(img) # AI returns ("Foe", (lat, long), true) (crops image to bounding rect) TODO: wrap the AI 
+        # objType : 'Friend' || 'Foe'
+        # found : bool
+        # imageResult: image with rectangle drawn
 
-    if found and (not repeatedTarget(location)): # TODO: finish repeated target if found a repeated location tag
+    if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
-        croppedTarget = cropToRect(img) # TODO: crop to rect or get it cropped from detect shape 
-        mission["type"] = result
+        mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)
 
         mission["img"] = croppedTarget
-        mission["originalImage"] = img
+        mission["originalImage"] = imageResult
 
-        jsonLocation = submitToUSB(mission, detectedCount)
-        submitToJudge(jsonLocation) # DevOps TODO: finish interop wrapping
+        mission["imgPath"] = submitToUSB(mission, detectedCount)
+        submitToJudge(mission) # DevOps TODO: finish interop wrapping
 
-        if result == "Friend": # RR = Red Rectangel
-            sendUAV(location) # MavLink TODO: see Emad/salma/abbas about this unholy function
+        # if objType == "Friend": # RR = Red Rectangel
+        #     sendUAV(location) # MavLink TODO: see wahdan/salma
