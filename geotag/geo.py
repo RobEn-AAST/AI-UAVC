@@ -12,11 +12,11 @@ def repeatedTarget(loc):
       lat, lon = Location.split(',')
       lat = float(lat)
       lon = float(lon)
-      if len(geos) == 0:
-          with open('geotags.json','w') as f:
-               geos["geos"].append({"lat":lat, "lon":lon})
-               json.dump(geos,f)
-         return False            
+      if len(geos["geos"]) == 0:
+         with open('geotags.json','w') as f:
+            geos["geos"].append({"lat":lat, "lon":lon})
+            json.dump(geos,f)
+         return False
       for i in range(len(geos)):
          result = ((((lat - geos["geos"][i]["lat"] )**2) + ((lon - geos["geos"][i]["lon"])**2) )**0.5)
          if result>=30: # calculate distance avbout 20 metetr from the geolocation
