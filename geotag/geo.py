@@ -26,6 +26,5 @@ def repeatedTarget(loc):
                geos["geos"].append({"lat":lat, "lon":lon})
                print(geos)
                json.dump(geos,f)
-               print(i)
                return False
       return True
