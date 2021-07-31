@@ -1,9 +1,13 @@
-from client.auvsi_suas.client import client
-from client.auvsi_suas.proto import interop_api_pb2
+from interop_library.auvsi_suas.client import client
+from interop_library.auvsi_suas.proto import interop_api_pb2
 from urllib import request
 from re import findall
 import functools
 from cv2 import imwrite
+from PIL.ExifTags import TAGS
+from PIL import Image
+import gpsphoto
+
 
 class interop_client:
     __responses = {
@@ -63,60 +67,31 @@ class interop_client:
         return self.__this_client.get_mission(mission_id)
 
     @__handle_with(__message)
-    def send_standard_object(self,mission,geolocation,orientation,shape,shape_color,letter,letter_color,image):
+    def submitToJudge(self, mission, id):
         object_of_interset = interop_api_pb2.Odlc()
         object_of_interset.type = interop_api_pb2.Odlc.STANDARD
-        object_of_interset.latitude = geolocation[0]
-        object_of_interset.longitude = geolocation[1]
-        object_of_interset.orientation = orientation
-        object_of_interset.shape = shape
-        object_of_interset.shape_color = shape_color
-        object_of_interset.alphanumeric = letter
-        object_of_interset.alphanumeric_color = letter_color
+        object_of_interset.latitude = mission["latitude"]
+        object_of_interset.longitude = mission["longitude"]
+        object_of_interset.alphanumeric = mission["alphanumeric"]
         object_of_interset.autonomous = True
         object_of_interset.mission = mission
         object_of_interset = self.__this_client.post_odlc(object_of_interset)
-        imwrite(str(mission) + ".jpg", image)
-        with open(str(mission) + ".jpg", 'rb') as f:
+        imwrite(str(mission) + ".jpg", id)
+        photo = gpsphoto.GPSPhoto(mission["imgPath"])
+        info = gpsphoto.GPSInfo((mission["latitude"], mission["longitude"]))
+        photo.modGPSData(info,  mission["imgPath"])
+        with open(mission["imgPath"], 'rb') as f:
             image_data = f.read()
             self.__this_client.put_odlc_image(object_of_interset.id, image_data)
 
     @__handle_with(__message)
-    def send_emergant_object(self,mission,latitude,longitude,image_path,description = None):
-        object_of_interset = interop_api_pb2.Odlc()
-        object_of_interset.mission = mission
-        object_of_interset.type = 4
-        object_of_interset.latitude = latitude
-        object_of_interset.longitude = longitude
-        if description != None:
-            object_of_interset.description = description
-        object_of_interset.autonomous = True
-        object_of_interset = self.__this_client.post_odlc(object_of_interset)
-        with open(image_path, 'rb') as f:
-            image_data = f.read()
-            self.__this_client.put_odlc_image(object_of_interset.id, image_data)
+    def update_location(self, latitude, longitude, altitude, heading):
+        telemetry= interop_api_pb2.Telemetry()
+        telemetry.latitude = 38
+        telemetry.longitude = -76
+        telemetry.altitude = 100
+        telemetry.heading = 90
+        self.__this_client.post_telemetry(telemetry)
 
-    @__handle_with(__message)
-    def send_sample(self):
-        object_of_interset = interop_api_pb2.Odlc()
-        object_of_interset.type = interop_api_pb2.Odlc.STANDARD
-        object_of_interset.latitude = 38
-        object_of_interset.longitude = -76
-        object_of_interset.orientation = interop_api_pb2.Odlc.N
-        object_of_interset.shape = interop_api_pb2.Odlc.SQUARE
-        object_of_interset.shape_color = interop_api_pb2.Odlc.GREEN
-        object_of_interset.alphanumeric = 'A'
-        object_of_interset.alphanumeric_color = interop_api_pb2.Odlc.WHITE
-        object_of_interset.autonomous = True
-        object_of_interset.mission = 1
-        object_of_interset = self.__this_client.post_odlc(object_of_interset)        
-        with open('1.jpg', 'rb') as f:
-            image_data = f.read()
-            self.__this_client.put_odlc_image(object_of_interset.id, image_data)
-    @staticmethod
-    def test(ipadrress,port,username,password):
-        my = interop_client(ipadrress,port,username,password)
-        my.send_sample()
-        my.send_emergant_object(1,38,-76,'1.jpg',description= "iam an emergant object")
 if __name__ == '__main__':
     interop_client.test('127.0.0.1','8000','testuser','testpass')

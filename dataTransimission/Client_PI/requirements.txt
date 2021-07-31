@@ -5,3 +5,4 @@ numpy==1.19.5
 opencv-contrib-python==4.5.3.56
 pymavlink==2.4.15
 wincertstore==0.2
+dronekit==2.9.2

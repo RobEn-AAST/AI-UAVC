@@ -9,7 +9,7 @@ features. A simpler Client is also given as a base implementation.
 import json
 import requests
 from auvsi_suas.client.exceptions import InteropError
-from client.auvsi_suas.proto import interop_api_pb2
+from auvsi_suas.proto import interop_api_pb2
 from concurrent.futures import ThreadPoolExecutor
 from google.protobuf import json_format
 

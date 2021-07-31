@@ -1,0 +1,11 @@
+version: "3.9"
+
+
+services: 
+    IMAGE_SERVER:
+        build: .
+        image: uav_image_server
+        ports: 
+            - "5000:5000"
+            - "5100:5100"
+        command: bash -c "python3 main.py"

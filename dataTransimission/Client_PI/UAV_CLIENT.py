@@ -6,6 +6,9 @@ import pickle
 import struct
 from threading import Thread, Lock
 import numpy as np
+from dronekit import connect
+
+
 ConnectionThreadLock = Lock()
 class ConnectionThread(Thread): #A thread for maintaning a redundant connection
     def __init__(self,socket : socket):
@@ -114,6 +117,8 @@ class UAV_CLIENT(socket):
     
 #Driver code to test the program
 if __name__ == '__main__':
+    connection_string ='tcp:127.0.0.1:5760'
+    vehicle = connect(connection_string, wait_ready=True)
     cap = cv2.VideoCapture(0)
     mysocket = UAV_CLIENT()
     # Get default camera window size
@@ -122,8 +127,9 @@ if __name__ == '__main__':
         if not ret:
             print("no feed")
             break
-        string = "62.888,-45.82"
-        mysocket.sendMission(string, frame)
+        coordinates = (vehicle.location.global_frame.lat, vehicle.location.global_frame.lat)
+        print(coordinates)
+        mysocket.sendMission(coordinates, frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         #sleep(2)

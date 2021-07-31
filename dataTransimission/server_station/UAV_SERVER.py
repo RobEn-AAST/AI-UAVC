@@ -1,10 +1,8 @@
 from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP,error
-import numpy as np
 from cv2 import cv2
 from interop import interop_client
 import struct
 import pickle
-from threading import Timer
 """
 UAV Server for exchanging data between raspberry PI and the ground station using socket programming
 
@@ -121,7 +119,7 @@ class UAV_SERVER(socket):
             if mission["finished"]:
                 return False,None,None
             image=cv2.resize(cv2.imdecode(mission["image"], cv2.IMREAD_COLOR),(250,250))
-            geolocation = list(map(float, mission["geo"].split(',')))
+            geolocation = mission["geo"]
             self.conn.sendall(b"success")
             return True,geolocation, image
         except Exception as exception:
