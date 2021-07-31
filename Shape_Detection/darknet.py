@@ -345,10 +345,22 @@ def get_cropped_images_array(image, detections):
 
 
 def one_detection_to_points(detections):
-        label, confidence, bbox = i
+        label, confidence, bbox = detections
         xmin, ymin, xmax, ymax = bbox2points(bbox)
             
         return xmin, ymin, xmax, ymax
+
+
+def detectShape(frame):
+    image, detection = predict_rFullImage(frame)
+    crop, count = get_cropped_images_array(image, detection)
+    cropped = crop[0]
+    label, confidence, bbox = detection
+    # print(objType)
+    Found = False
+    if detection.__len__() == 0:
+        Found = True
+    return label, image, cropped, Found
 
 
 if __name__ == "__main__":
