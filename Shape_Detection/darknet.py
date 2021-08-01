@@ -150,6 +150,7 @@ def remove_negatives(detections, class_names, num):
                 predictions.append((name, detections[j].prob[idx], (bbox)))
     return predictions
 
+empty = cv2.imread('empty.jpg')
 
 def detect_image(network, class_names, image, thresh=.5, hier_thresh=.5, nms=.45):
     """
@@ -274,7 +275,7 @@ network_predict_batch.restype = POINTER(DETNUMPAIR)
 # ax = load_network('cfg/yolov4-tiny-3l-test.cfg', 'data/obj.data', 'backup/yolov4-tiny-3l_last.weights')
 # detect_image(ax, ['BR', 'RR'], "new/a.jpg".encode('utf-8'))
 
-network, class_names, class_colors_v = 0, 0, {'BR':(0,0,255), 'RR':(255,0,0)}
+network, class_names, class_colors_v = 0, 0, {'Friend':(0,0,255), 'Foe':(255,0,0)}
 width, height, darknet_image = 0, 0, 0
 
 def load_model():
@@ -353,15 +354,27 @@ def one_detection_to_points(detections):
 
 def detectShape(frame):
     image, detection = predict_rFullImage(frame)
-    crop, count = get_cropped_images_array(image, detection)
-    cropped = crop[0]
-    label = detection[0][0]
+    
+    if detection.__len__()!=0:
+        label = detection[0][0]
+    else:
+        return "", frame, empty, False
+
     # confidence = detection[0][1]
     # bbox = detection[0][2]
     # print(objType)
     Found = False
     if label is not None:
         Found = True
+    
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    crop, count = get_cropped_images_array(image, detection)
+
+    if count > 0:
+        cropped = crop[0]
+    else:
+        cropped = crop
+
     return label, image, cropped, Found
 
 
@@ -374,17 +387,26 @@ if __name__ == "__main__":
     
     vid = cv2.VideoCapture('../newData/EX2/merged.mp4')
     ret = True
-    while(ret):
+    while(True):
         ret, frame = vid.read()
+        if not ret: break
         
         start = time.process_time()
         # image, detection = predict_rdividedImage(frame)
         image, detection = predict_rFullImage(frame)
         print(detection)
         print(time.process_time() - start)
+        
+        
+        label, image, cropped, Found = detectShape(frame)
 
+        cv2.imshow('frame', image)
+        try:
+            cv2.imshow('frame2', cropped)
+        except Exception:
+            pass
+        print(label, Found)
 
-        cv2.imshow('frame', cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
         # crop, count = get_cropped_images_array(image, detection)
         # print(count)
         # if (count>1):
