@@ -355,10 +355,12 @@ def detectShape(frame):
     image, detection = predict_rFullImage(frame)
     crop, count = get_cropped_images_array(image, detection)
     cropped = crop[0]
-    label, confidence, bbox = detection
+    label = detection[0][0]
+    # confidence = detection[0][1]
+    # bbox = detection[0][2]
     # print(objType)
     Found = False
-    if detection.__len__() == 0:
+    if label is not None:
         Found = True
     return label, image, cropped, Found
 
