@@ -328,21 +328,22 @@ def free_model():
     free_image(darknet_image)
 
 
-image_arr = []
-image_arr = [0 for i in range(5)]
-
-def get_cropped_images_array(image, detections):
-    count = 0
-
-    image_arr = [0 for i in range(5)]
-    for i in detections:
-        label, confidence, bbox = i
+def get_cropped_image(image, detections):
+    count = 1
+    if len(detections) > 0:
+        label, confidence, bbox = detections
         xmin, ymin, xmax, ymax = bbox2points(bbox)
-        image_arr[count] = image[ymin:ymax, xmin:xmax]
-        count+=1
+        cropped_image = image[ymin:ymax, xmin:xmax]
+
+    # image_arr = [0 for i in range(5)]
+    # for i in detections:
+    #     label, confidence, bbox = i
+    #     xmin, ymin, xmax, ymax = bbox2points(bbox)
+    #     image_arr[count] = image[ymin:ymax, xmin:xmax]
+    #     count+=1
 
 
-    return image_arr, count
+    return cropped_image, count
 
 
 def one_detection_to_points(detections):
@@ -355,11 +356,12 @@ def one_detection_to_points(detections):
 def detectShape(frame):
     image, detection = predict_rFullImage(frame)
     
-    if detection.__len__()!=0:
-        label = detection[0][0]
+    if detection.__len__()>0:
+        detection = detection[0]
     else:
         return "", frame, empty, False
 
+    label = detection[0]
     # confidence = detection[0][1]
     # bbox = detection[0][2]
     # print(objType)
@@ -368,14 +370,9 @@ def detectShape(frame):
         Found = True
     
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    crop, count = get_cropped_images_array(image, detection)
+    crop, count = get_cropped_image(image, detection)
 
-    if count > 0:
-        cropped = crop[0]
-    else:
-        cropped = crop
-
-    return label, image, cropped, Found
+    return label, image, crop, Found
 
 
 if __name__ == "__main__":
@@ -385,7 +382,8 @@ if __name__ == "__main__":
 
 
     
-    vid = cv2.VideoCapture('../newData/EX2/merged.mp4')
+    # vid = cv2.VideoCapture('../newData/EX2/merged.mp4')
+    vid = cv2.VideoCapture('../newData/MAH00155.MP4')
     ret = True
     while(True):
         ret, frame = vid.read()
