@@ -382,8 +382,8 @@ if __name__ == "__main__":
 
 
     
-    # vid = cv2.VideoCapture('../newData/EX2/merged.mp4')
-    vid = cv2.VideoCapture('../newData/MAH00155.MP4')
+    # vid = cv2.VideoCapture('testvideos/MAH00145.MP4')
+    vid = cv2.VideoCapture('testvideos/MAH00155.MP4')
     ret = True
     while(True):
         ret, frame = vid.read()
