@@ -55,46 +55,47 @@ def rotate_image(image, angle):
 
 def alphanum_B(image, id):
 
-	############################################################################################################## REPLACE [0]
-	# for angle in range(0, 360, 90):
-	# 	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + "_" + str(angle) + ".jpg", rotate_image(image, angle))
+    ############################################################################################################## REPLACE [0]
+    for angle in range(0, 360, 90):
+        cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + "_" + str(angle) + ".jpg", rotate_image(image, angle))
 
-	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + ".jpg", image)
-	############################################################################################################## [0]
+    # x= cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + ".jpg", image)
+    ############################################################################################################## [0]
 
-	out_character = ""
-	out_confidence = 0
-	out_character = Recognize("AlphanumericCharacterDetection/results/")
-	if out_character is None or out_character == '' :
-		return None,None,None
-	else:
-		pass
+    out_character = ""
+    out_confidence = 0
+    out_character = Recognize("AlphanumericCharacterDetection/results/")
+    if out_character is None or out_character == '' :
+        return None,None,None
+    else:
+        pass
 
-	############################################################################################################## REPLACE [1]
-	# for angle in range(0, 360, 90):
-	# 	remove("AlphanumericCharacterDetection/results/" + + str(id) + "_" + str(angle) + ".jpg")
-	remove("AlphanumericCharacterDetection/results/" + str(id)  + ".jpg")
-	############################################################################################################## end [1]
-	
-	############################################################################################################## UNCOMMENT [2]
-	# out_character = sorted(out_character, key = lambda x: x[1]) # sort by confidence
-										############### special cases ##############
-										# we prefer M, T, C, 4, 3 than other chars #
-										############################################
-	# preferred = ['M','T','C','4', '3']
-	# for i in preferred:
-	# 	if out_character[0] == i:
-	# 		return out_character[0]
-	
-	# for i in range(len(out_character)):
-	# 	if out_character[i][0] in preferred:
-	# 		out_character[i][1] += 0.1
-	
-	# out_character = sorted(out_character, key = lambda x: x[1]) # sort again by confidence
-	# out_character = out_character[0]
-	############################################################################################################# [2]
+    ############################################################################################################## REPLACE [1]
+    for angle in range(0, 360, 90):
+        remove("AlphanumericCharacterDetection/results/"  + str(id) + "_" + str(angle) + ".jpg")
+    # remove("AlphanumericCharacterDetection/results/" + str(id)  + ".jpg")
+    ############################################################################################################## end [1]
+    
+    ############################################################################################################## UNCOMMENT [2]
+    out_character = sorted(out_character, key = lambda x: x[1],reverse=True) # sort by confidence
+                                        ############### special cases ##############
+                                        # we prefer M, T, C, 4, 3 than other chars #
+                                        ############################################
+    
+    preferred = ['M','T','C','4', '3']
+    for i in preferred:
+        if out_character[0] == i:
+            return out_character[0]
+    
+    for i in range(len(out_character)):
+        if out_character[i][0] in preferred:
+            out_character[i][1] += 0.1
+    
+    out_character = sorted(out_character, key = lambda x: x[1],reverse=True) # sort again by confidence
+    out_character = out_character[0]
+    ############################################################################################################# [2]
 
-	return out_character
+    return out_character
 
 
 
