@@ -45,7 +45,7 @@ class UAV_CLIENT(socket):
             self.initialized = True
             self.ADDRESS = ADDRESS
             self.PORT = PORT
-            self.settimeout(2.0)
+            self.settimeout(0.5)
         except ConnectionRefusedError as e:
             print("failed to establish connection due to : " + str(e))
             self.initialized = False
@@ -117,8 +117,8 @@ class UAV_CLIENT(socket):
     
 #Driver code to test the program
 if __name__ == '__main__':
-    connection_string ='tcp:127.0.0.1:5760'
-    vehicle = connect(connection_string, wait_ready=True)
+    #connection_string ='tcp:127.0.0.1:5760'
+    #vehicle = connect(connection_string, wait_ready=True)
     cap = cv2.VideoCapture(0)
     mysocket = UAV_CLIENT()
     # Get default camera window size
@@ -127,11 +127,11 @@ if __name__ == '__main__':
         if not ret:
             print("no feed")
             break
-        coordinates = (vehicle.location.global_frame.lat, vehicle.location.global_frame.lat)
+        coordinates = (30.45, 34.5)
         print(coordinates)
         mysocket.sendMission(coordinates, frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        #sleep(2)
+        sleep(0.1)
     cap.release()
     mysocket.endMission()
