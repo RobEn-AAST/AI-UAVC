@@ -5,8 +5,8 @@ import AlphanumericCharacterDetection.AlphaNumeric
 from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
 import Shape_Detection.darknet as dn
 
-server = UAV_SERVER()
 dn.load_model()
+server = UAV_SERVER()
 mission = {}
 detectedCount = 0
 terminate = True
@@ -28,7 +28,7 @@ while terminate:
         mission["originalImage"] = imageResult
 
         mission["imgPath"] = submitToUSB(mission, detectedCount)
-        submitToJudge(mission) # DevOps TODO: finish interop wrapping
+        #submitToJudge(mission) # DevOps TODO: finish interop wrapping
 
-        # if objType == "Friend": # RR = Red Rectangel
-        #     sendUAV(location) # MavLink TODO: see wahdan/salma
+        if objType == "Friend": # RR = Red Rectangel
+            sent = server.sendUAV(location) # MavLink TODO: see wahdan/salma

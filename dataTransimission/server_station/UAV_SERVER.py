@@ -1,5 +1,6 @@
 from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP,error
 from cv2 import cv2
+from requests.models import Response
 from .interop import interop_client
 import struct
 import pickle
@@ -89,7 +90,7 @@ class UAV_SERVER(socket):
         print("UAV SERVER is in listening mode...")
         try:
             self.conn, self.FROM = self.accept() # accept 3 way hand shake for session establishment
-            self.conn.settimeout(2.0)
+            self.conn.settimeout(0.5)
             self.FROM = self.FROM[0]
             self.initialized = True
             print("3-way TCP Hand shake established with PI (" + self.FROM +") on port : " + str(PORT))    
@@ -98,6 +99,13 @@ class UAV_SERVER(socket):
             self.initialized = False
         return
         
+    def sendUAV(self, location):
+        new_socket = self.__init__(PORT=5500)
+        new_socket.conn.sendall(str(location).encode('utf-8'))
+        response = new_socket.conn.recv(1024)
+        if response == b'success':
+            new_socket.close()
+        return True
 
     def receiveMissions(self):
         image  = None
