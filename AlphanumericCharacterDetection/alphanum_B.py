@@ -58,7 +58,7 @@ def alphanum_B(image, id):
 	############################################################################################################## REPLACE [0]
 	# for angle in range(0, 360, 90):
 	# 	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + "_" + str(angle) + ".jpg", rotate_image(image, angle))
-	
+
 	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + ".jpg", image)
 	############################################################################################################## [0]
 
@@ -78,9 +78,9 @@ def alphanum_B(image, id):
 	
 	############################################################################################################## UNCOMMENT [2]
 	# out_character = sorted(out_character, key = lambda x: x[1]) # sort by confidence
-										############# special cases #############
+										############### special cases ##############
 										# we prefer M, T, C, 4, 3 than other chars #
-										#########################################
+										############################################
 	# preferred = ['M','T','C','4', '3']
 	# for i in preferred:
 	# 	if out_character[0] == i:
