@@ -1,4 +1,5 @@
 import cv2
+from numpy.core.fromnumeric import ptp
 from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
 import AlphanumericCharacterDetection.AlphaNumeric
@@ -17,7 +18,6 @@ while terminate:
 
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
     cv2.imwrite("results.jpg",imageResult)
-
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
         mission["type"] = objType
@@ -27,8 +27,8 @@ while terminate:
 
         #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
 
-        if objType == "Friend":
-            server.sendUAV(location)
+        # if objType == "Friend":
+        #     server.sendUAV(location)
 
 
 # TODO 

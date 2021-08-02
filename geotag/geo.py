@@ -6,7 +6,6 @@ def repeatedTarget(loc):
 
    with open('geotags.json','r') as f:
       geos = json.load(f)
-
    for geo in geos["geos"]:
       result = ((((lat - geo["lat"] )**2) + ((lon - geo["lon"])**2) )**0.5)
 

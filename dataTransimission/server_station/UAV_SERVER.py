@@ -90,7 +90,7 @@ class UAV_SERVER(socket):
         print("UAV SERVER is in listening mode...")
         try:
             self.conn, self.FROM = self.accept() # accept 3 way hand shake for session establishment
-            self.conn.settimeout(0.5)
+            self.settimeout(1.2)
             self.FROM = self.FROM[0]
             self.initialized = True
             print("3-way TCP Hand shake established with PI (" + self.FROM +") on port : " + str(PORT))    
