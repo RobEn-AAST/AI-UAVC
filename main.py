@@ -2,10 +2,10 @@ from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
 import AlphanumericCharacterDetection.AlphaNumeric
 from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
-
+import Shape_Detection.darknet as dn
 
 server = UAV_SERVER()
-# load model
+dn.load_model()
 mission = {}
 detectedCount = 0
 terminate = True
@@ -14,7 +14,7 @@ while terminate:
     terminate, location, img = server.receiveMissions() # TODO: set up location on pi too
     mission["latitude"], mission["longitude"] = location
 
-    objType, imageResult, croppedTarget, found = detectShape(img) # AI returns ("Foe", (lat, long), true) (crops image to bounding rect) TODO: wrap the AI 
+    objType, imageResult, croppedTarget, found = dn.detectShape(img) # AI returns ("Foe", (lat, long), true) (crops image to bounding rect) TODO: wrap the AI 
         # objType : 'Friend' || 'Foe'
         # found : bool
         # imageResult: image with rectangle drawn

@@ -280,7 +280,7 @@ width, height, darknet_image = 0, 0, 0
 
 def load_model():
     global network, class_names, class_colors_v, darknet_image, width, height
-    network, class_names, class_colors_v = load_network('Shape_Detection/cfg/yolov4-tiny-3l-test.cfg', 'Shape_Detection/data/obj.data', 'Shape_Detection/backup/yolov4-tiny-3l_last.weights')
+    network, class_names, class_colors_v = load_network('cfg/yolov4-tiny-3l-test.cfg', 'data/obj.data', 'backup/yolov4-tiny-3l_last.weights')
 
     width = network_width(network)
     height = network_height(network)
@@ -375,53 +375,53 @@ def detectShape(frame):
     return label, image, crop, Found
 
 
-# if __name__ == "__main__":
-#     start = time.process_time()
-#     load_model()
-#     print(time.process_time() - start)
+if __name__ == "__main__":
+    start = time.process_time()
+    load_model()
+    print(time.process_time() - start)
 
 
     
-#     # vid = cv2.VideoCapture('testvideos/MAH00145.MP4')
-#     vid = cv2.VideoCapture('testvideos/MAH00155.MP4')
-#     ret = True
-#     while(True):
-#         ret, frame = vid.read()
-#         if not ret: break
+    # vid = cv2.VideoCapture('testvideos/MAH00145.MP4')
+    vid = cv2.VideoCapture('testvideos/MAH00155.MP4')
+    ret = True
+    while(True):
+        ret, frame = vid.read()
+        if not ret: break
         
-#         start = time.process_time()
-#         # image, detection = predict_rdividedImage(frame)
-#         image, detection = predict_rFullImage(frame)
-#         print(detection)
-#         print(time.process_time() - start)
+        start = time.process_time()
+        # image, detection = predict_rdividedImage(frame)
+        image, detection = predict_rFullImage(frame)
+        print(detection)
+        print(time.process_time() - start)
         
         
-#         label, image, cropped, Found = detectShape(frame)
+        label, image, cropped, Found = detectShape(frame)
 
-#         cv2.imshow('frame', image)
-#         try:
-#             cv2.imshow('frame2', cropped)
-#         except Exception:
-#             pass
-#         print(label, Found)
+        cv2.imshow('frame', image)
+        try:
+            cv2.imshow('frame2', cropped)
+        except Exception:
+            pass
+        print(label, Found)
 
-#         # crop, count = get_cropped_images_array(image, detection)
-#         # print(count)
-#         # if (count>1):
-#         #     input()
+        # crop, count = get_cropped_images_array(image, detection)
+        # print(count)
+        # if (count>1):
+        #     input()
 
-#         # for i in range(count):
-#         #     try:
-#         #         cv2.imshow('frame'+str(i), cv2.cvtColor(crop[i], cv2.COLOR_RGB2BGR))
-#         #     except Exception as e:
-#         #         print(e)
-#         #         continue
+        # for i in range(count):
+        #     try:
+        #         cv2.imshow('frame'+str(i), cv2.cvtColor(crop[i], cv2.COLOR_RGB2BGR))
+        #     except Exception as e:
+        #         print(e)
+        #         continue
         
 
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             break
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
     
-#     vid.release()
-#     cv2.destroyAllWindows()
+    vid.release()
+    cv2.destroyAllWindows()
 
-#     free_model()
+    free_model()
