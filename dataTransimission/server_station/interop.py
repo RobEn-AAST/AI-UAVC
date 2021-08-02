@@ -1,12 +1,13 @@
-from interop_library.auvsi_suas.client import client
-from interop_library.auvsi_suas.proto import interop_api_pb2
+from auvsi_suas.proto import interop_api_pb2
+from .interop_library.auvsi_suas.client import client
+from .interop_library.auvsi_suas.proto import interop_api_pb2
 from urllib import request
 from re import findall
 import functools
 from cv2 import imwrite
 from PIL.ExifTags import TAGS
 from PIL import Image
-import gpsphoto
+from GPSPhoto import gpsphoto
 
 
 class interop_client:

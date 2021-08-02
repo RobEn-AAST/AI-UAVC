@@ -1,6 +1,6 @@
 from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP,error
 from cv2 import cv2
-from interop import interop_client
+from .interop import interop_client
 import struct
 import pickle
 """

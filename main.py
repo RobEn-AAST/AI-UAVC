@@ -1,3 +1,4 @@
+import cv2
 from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
 import AlphanumericCharacterDetection.AlphaNumeric
@@ -18,12 +19,11 @@ while terminate:
         # objType : 'Friend' || 'Foe'
         # found : bool
         # imageResult: image with rectangle drawn
-
+    cv2.imwrite("results.jpg",imageResult)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
         mission["type"] = objType
-        mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)
-
+        mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
         mission["img"] = croppedTarget
         mission["originalImage"] = imageResult
 
