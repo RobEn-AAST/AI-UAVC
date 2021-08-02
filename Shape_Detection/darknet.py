@@ -362,8 +362,8 @@ def detectShape(frame):
         return "", frame, empty, False
 
     label = detection[0]
-    # confidence = detection[0][1]
-    # bbox = detection[0][2]
+    # confidence = detection[1]
+    # bbox = detection[2]
     # print(objType)
     Found = False
     if label is not None:
