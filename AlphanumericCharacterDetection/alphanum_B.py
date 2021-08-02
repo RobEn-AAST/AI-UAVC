@@ -39,21 +39,29 @@ Algorithm :-
 '''
 from cv2 import cv2
 from AlphanumericCharacterDetection.recogniser import Recognize
-from os import remove
+from os import remove, listdir
 import time
 import numpy as np
 
 WHITE_LIST = ['A','B','C','c','D','E','F','G','H','I','J','K','k','L','l','M','m','N','O','o','P','p','Q','R','S','s','T','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9']
 
 def rotate_image(image, angle):
-  image_center = tuple(np.array(image.shape[1::-1]) / 2)
-  rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
-  result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
-  return result
+	if angle == 0: return image
+	image_center = tuple(np.array(image.shape[1::-1]) / 2)
+	rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+	result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
+	return result
 
 
 def alphanum_B(image, id):
+
+	############################################################################################################## REPLACE [0]
+	# for angle in range(0, 360, 90):
+	# 	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + "_" + str(angle) + ".jpg", rotate_image(image, angle))
+	
 	cv2.imwrite("AlphanumericCharacterDetection/results/" + str(id) + ".jpg", image)
+	############################################################################################################## [0]
+
 	out_character = ""
 	out_confidence = 0
 	out_character = Recognize("AlphanumericCharacterDetection/results/")
@@ -61,7 +69,31 @@ def alphanum_B(image, id):
 		return None,None,None
 	else:
 		pass
+
+	############################################################################################################## REPLACE [1]
+	# for angle in range(0, 360, 90):
+	# 	remove("AlphanumericCharacterDetection/results/" + + str(id) + "_" + str(angle) + ".jpg")
 	remove("AlphanumericCharacterDetection/results/" + str(id)  + ".jpg")
+	############################################################################################################## end [1]
+	
+	############################################################################################################## UNCOMMENT [2]
+	# out_character = sorted(out_character, key = lambda x: x[1]) # sort by confidence
+										############# special cases #############
+										# we prefer M, T, C, 4, 3 than other chars #
+										#########################################
+	# preferred = ['M','T','C','4', '3']
+	# for i in preferred:
+	# 	if out_character[0] == i:
+	# 		return out_character[0]
+	
+	# for i in range(len(out_character)):
+	# 	if out_character[i][0] in preferred:
+	# 		out_character[i][1] += 0.1
+	
+	# out_character = sorted(out_character, key = lambda x: x[1]) # sort again by confidence
+	# out_character = out_character[0]
+	############################################################################################################# [2]
+
 	return out_character
 
 
