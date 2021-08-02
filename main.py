@@ -12,14 +12,12 @@ detectedCount = 0
 terminate = True
 
 while terminate:
-    terminate, location, img = server.receiveMissions() # TODO: set up location on pi too
+    terminate, location, img = server.receiveMissions()
     mission["latitude"], mission["longitude"] = location
 
-    objType, imageResult, croppedTarget, found = dn.detectShape(img) # AI returns ("Foe", (lat, long), true) (crops image to bounding rect) TODO: wrap the AI 
-        # objType : 'Friend' || 'Foe'
-        # found : bool
-        # imageResult: image with rectangle drawn
+    objType, imageResult, croppedTarget, found = dn.detectShape(img)
     cv2.imwrite("results.jpg",imageResult)
+
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
         mission["type"] = objType
@@ -32,3 +30,9 @@ while terminate:
 
         # if objType == "Friend": # RR = Red Rectangel
         #     sendUAV(location) # MavLink TODO: see wahdan/salma
+
+
+# TODO 
+# submit to judge refactor
+# get exact timeout for sleep from UAV team
+# talk about interop with UAV
