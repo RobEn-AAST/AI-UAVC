@@ -21,8 +21,8 @@ def getAlphaNumeric(imagefile):
 	return AlphanumericCharacterDetection.alphanum_B.alphanum_B(mask, 1)
 
 def crop_image(imagefile):
-	height =imagefile.shape[0]
-	width =imagefile.shape[1]
+	height = imagefile.shape[0]
+	width = imagefile.shape[1]
 	height_to_crop = int(height * (20/100))
 	width_to_crop = int(width * (20/100))
 	x_border = height -(height_to_crop*2)

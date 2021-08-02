@@ -19,28 +19,12 @@ import cv2
 #
 
 def submitToUSB(submitables,c) :
-    if "QRimg" in submitables:
-        
-        jsonString = json.dumps(submitables)
-        jsonFile = open(f"WriteJsonOnDisk/QRcode/{c}.json", "w")
-        jsonFile.write(jsonString)
-        jsonFile.close()
 
-    
-        img = Image.open("QR_code/test.png",'r')
-        img.save(f'WriteJsonOnDisk/QRcode/{c}.png', 'PNG')
-    
-    elif "alphanumeric" in submitables:
-        
-        jsonString = json.dumps(submitables)
-        jsonFile = open(f"WriteJsonOnDisk/Image/{c}.json", "w")
-        jsonFile.write(jsonString)
-        jsonFile.close()
+    jsonString = json.dumps(submitables)
+    jsonFile = open(f"WriteJsonOnDisk/Image/{c}.json", "w")
+    jsonFile.write(jsonString)
+    jsonFile.close()
 
-    
-        img = Image.open("QR_code/test.png",'r')
-        img.save(f'WriteJsonOnDisk/Image/{c}.png', 'PNG')
-# while c!=4 :
-#     submitablesToUSB(submitablesImg,c)
-#     c =  c+1
+    img = Image.open("QR_code/test.png",'r')
+    img.save(f'WriteJsonOnDisk/Image/{c}.png', 'PNG')
 
