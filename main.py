@@ -22,17 +22,19 @@ while terminate:
         detectedCount = detectedCount + 1
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
-        mission["img"] = croppedTarget
-        mission["originalImage"] = imageResult
 
-        mission["imgPath"] = submitToUSB(mission, detectedCount)
-        #submitToJudge(mission) # DevOps TODO: finish interop wrapping
+        imagePath = submitToUSB(mission, imageResult,detectedCount)
 
-        # if objType == "Friend": # RR = Red Rectangel
-        #     sendUAV(location) # MavLink TODO: see wahdan/salma
+        #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
+
+        if objType == "Friend":
+            server.sendUAV(location)
 
 
 # TODO 
-# submit to judge refactor
+# nefok repeatedTarget and make it clear
 # get exact timeout for sleep from UAV team
 # talk about interop with UAV
+# make sure connection string on PI is set correctly
+# talk about sockets in sendUAV with emad
+# ask emad which image to save (cropped or original) 
