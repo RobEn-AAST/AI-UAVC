@@ -17,7 +17,7 @@ ZED_CAMERA_v2_8=0
 USE_CPP=0
 DEBUG=0
 
-# ARCH= -gencode arch=compute_75,code=[sm_75,compute_75]
+ARCH= -gencode arch=compute_75,code=[sm_75,compute_75]
 
 OS := $(shell uname)
 
