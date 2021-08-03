@@ -363,8 +363,15 @@ def detectShape(frame):
 
     label = detection[0]
     # confidence = detection[1]
-    # bbox = detection[2]
+    bbox = detection[2]
+    xc, yc, w, h = bbox
+    distance_x_from_center = (1440/2 - xc)
+    distance_y_from_center = (1080/2 - yc)
     # print(objType)
+    meters_x_from_center = distance_x_from_center * 53 / 0.9 
+    meters_y_from_center = distance_y_from_center * 53 / 0.9 
+    lat, lon = meters_x_from_center * 6.53399049567 / 120 , meters_y_from_center * 6.53399049567 / 120
+
     Found = False
     if label is not None:
         Found = True
@@ -372,7 +379,7 @@ def detectShape(frame):
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     crop, count = get_cropped_image(image, detection)
 
-    return label, image, crop, Found
+    return label, image, crop, Found, lat, lon
 
 
 if __name__ == "__main__":
