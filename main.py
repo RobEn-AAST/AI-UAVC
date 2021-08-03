@@ -15,8 +15,8 @@ terminate = True
 while terminate:
     terminate, location, img = server.receiveMissions()
     mission["latitude"], mission["longitude"] = location
-
-    objType, imageResult, croppedTarget, found = dn.detectShape(img)
+    objType, imageResult, croppedTarget, found, lat, lon = dn.detectShape(img)
+    location = lat + location[0], lon + location[1]
     cv2.imwrite("results.jpg",imageResult)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
@@ -37,4 +37,9 @@ while terminate:
 # talk about interop with UAV
 # make sure connection string on PI is set correctly
 # talk about sockets in sendUAV with emad
-# ask emad which image to save (cropped or original) 
+# ask emad which image to save (cropped or original) =
+
+
+print(repeatedTarget((30.0967332,31.3732255)))
+
+# {"lat": -35.3625654, "lon": 149.1644959}
