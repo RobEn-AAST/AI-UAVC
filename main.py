@@ -20,10 +20,19 @@ while terminate:
     if location == None:
         continue
     mission["latitude"], mission["longitude"] = location
+<<<<<<< HEAD
 
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
     if found and (not repeatedTarget(location)):
         detectedCount += 1
+=======
+    objType, imageResult, croppedTarget, found, lat, lon = dn.detectShape(img)
+    location = lat + location[0], lon + location[1]
+    # cv2.imwrite("results.jpg",imageResult)
+    if found and (not repeatedTarget(location)):
+        detectedCount = detectedCount + 1
+        print(detectedCount)
+>>>>>>> a5b69235e81459192ed488577aa84bbb10f798f2
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
 
@@ -41,4 +50,4 @@ print("finished")
 # talk about interop with UAV
 # make sure connection string on PI is set correctly
 # talk about sockets in sendUAV with emad
-# ask emad which image to save (cropped or original) 
+# ask emad which image to save (cropped or original) = original
