@@ -17,9 +17,10 @@ while terminate:
     mission["latitude"], mission["longitude"] = location
     objType, imageResult, croppedTarget, found, lat, lon = dn.detectShape(img)
     location = lat + location[0], lon + location[1]
-    cv2.imwrite("results.jpg",imageResult)
+    # cv2.imwrite("results.jpg",imageResult)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
+        print(detectedCount)
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
 
@@ -27,9 +28,9 @@ while terminate:
 
         #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
 
-        # if objType == "Friend":
-        #     server.sendUAV(location)
-
+        if objType == "Friend":
+            server.sendUAV(location)
+print("finished")
 
 # TODO 
 # nefok repeatedTarget and make it clear
@@ -37,9 +38,4 @@ while terminate:
 # talk about interop with UAV
 # make sure connection string on PI is set correctly
 # talk about sockets in sendUAV with emad
-# ask emad which image to save (cropped or original) =
-
-
-print(repeatedTarget((30.0967332,31.3732255)))
-
-# {"lat": -35.3625654, "lon": 149.1644959}
+# ask emad which image to save (cropped or original) = original
