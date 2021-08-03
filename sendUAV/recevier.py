@@ -26,9 +26,8 @@ if __name__ == "__main__":
     server = ServerSock("localhost", 5000)
 
     connect = server.accept() 
-    while True:
-        print(server.getMessage(connect))
-
+    
+    print(server.getMessage(connect))
 
     
 
