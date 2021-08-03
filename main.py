@@ -19,8 +19,7 @@ while terminate:
     mission["latitude"], mission["longitude"] = location
 
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
-    cv2.imwrite("results.jpg",imageResult)
-    if found and (not repeatedTarget(location)):
+    if found :
         detectedCount = detectedCount + 1
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]

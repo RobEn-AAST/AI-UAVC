@@ -1,7 +1,5 @@
 from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP, SO_REUSEADDR, SOL_SOCKET
 from cv2 import cv2
-from requests.models import Response
-from .interop import interop_client
 import struct
 import pickle
 """
@@ -150,7 +148,7 @@ class UAV_SERVER(socket):
             return True,None,None
 
 #driver code to test the program
-if __name__ == '__maEin__':
+if __name__ == '__main__':
     myserver = UAV_SERVER()
     terminate = True
     #INTEROP = interop_client('127.0.0.1','8000','testuser','testpass')
