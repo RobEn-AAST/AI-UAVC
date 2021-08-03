@@ -1,7 +1,5 @@
-from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP,error
+from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP, SO_REUSEADDR, SOL_SOCKET
 from cv2 import cv2
-from requests.models import Response
-from .interop import interop_client
 import struct
 import pickle
 """
@@ -85,6 +83,7 @@ class UAV_SERVER(socket):
             Communication port (default is 5000)
         """
         super().__init__(AF_INET, SOCK_STREAM, IPPROTO_TCP)
+        self.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         self.bind(("", PORT))
         self.listen()
         print("UAV SERVER is in listening mode...")
@@ -114,6 +113,8 @@ class UAV_SERVER(socket):
             string = b""
             while len(string) < payload_size:
                 bits = self.conn.recv(4096)
+                if bits == b'':
+                    raise Exception
                 string += bits
             packed_msg_size = string[:payload_size]
             data = string[payload_size:]
@@ -132,10 +133,17 @@ class UAV_SERVER(socket):
             return True,geolocation, image
         except Exception as exception:
             self.initialized = False
-            self.close()
+            self.conn.close()
             print("Mission receiving failed due to : " + str(exception))
             print("RE-establishing connection")
-            self.__init__()
+            while True:
+                try:
+                    self.conn, self.FROM = self.accept()
+                    break
+                except Exception:
+                    continue
+
+            self.initialized = True
             print("Connection regained")
             return True,None,None
 

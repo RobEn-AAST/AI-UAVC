@@ -1,3 +1,4 @@
+from os import path
 from auvsi_suas.proto import interop_api_pb2
 from .interop_library.auvsi_suas.client import client
 from .interop_library.auvsi_suas.proto import interop_api_pb2
@@ -57,8 +58,10 @@ class interop_client:
 
     @staticmethod
     def __resolve_responses(response_code):
-        return interop_client.__responses[response_code]
-
+        if response_code in interop_client.__responses:
+            return interop_client.__responses[response_code]
+        else:
+            return "Un resolved error"
     @__handle_with(__message)
     def get_teams(self):
         return self.__this_client.get_teams()
@@ -68,7 +71,7 @@ class interop_client:
         return self.__this_client.get_mission(mission_id)
 
     @__handle_with(__message)
-    def submitToJudge(self, mission, id):
+    def submitToJudge(self, mission, imagePath,id = 1):
         object_of_interset = interop_api_pb2.Odlc()
         object_of_interset.type = interop_api_pb2.Odlc.STANDARD
         object_of_interset.latitude = mission["latitude"]
@@ -77,21 +80,20 @@ class interop_client:
         object_of_interset.autonomous = True
         object_of_interset.mission = mission
         object_of_interset = self.__this_client.post_odlc(object_of_interset)
-        imwrite(str(mission) + ".jpg", id)
-        photo = gpsphoto.GPSPhoto(mission["imgPath"])
+        photo = gpsphoto.GPSPhoto(imagePath)
         info = gpsphoto.GPSInfo((mission["latitude"], mission["longitude"]))
-        photo.modGPSData(info,  mission["imgPath"])
-        with open(mission["imgPath"], 'rb') as f:
+        photo.modGPSData(info,  path)
+        with open(imagePath, 'rb') as f:
             image_data = f.read()
             self.__this_client.put_odlc_image(object_of_interset.id, image_data)
 
     @__handle_with(__message)
     def update_location(self, latitude, longitude, altitude, heading):
         telemetry= interop_api_pb2.Telemetry()
-        telemetry.latitude = 38
-        telemetry.longitude = -76
-        telemetry.altitude = 100
-        telemetry.heading = 90
+        telemetry.latitude = latitude
+        telemetry.longitude = longitude
+        telemetry.altitude = altitude
+        telemetry.heading = heading
         self.__this_client.post_telemetry(telemetry)
 
 if __name__ == '__main__':

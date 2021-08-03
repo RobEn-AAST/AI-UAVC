@@ -86,10 +86,12 @@ def alphanum_B(image, id):
     for i in preferred:
         if out_character[0] == i:
             return out_character[0]
-    
+
     for i in range(len(out_character)):
         if out_character[i][0] in preferred:
-            out_character[i][1] += 0.1
+            temp = list(out_character[i])
+            temp[1] += 0.1
+            out_character[i] += tuple(temp)
     
     out_character = sorted(out_character, key = lambda x: x[1],reverse=True) # sort again by confidence
     out_character = out_character[0]
