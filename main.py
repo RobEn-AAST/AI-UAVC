@@ -14,6 +14,8 @@ terminate = True
 
 while terminate:
     terminate, location, img = server.receiveMissions()
+    if img is None:
+        continue
     mission["latitude"], mission["longitude"] = location
 
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
