@@ -2,6 +2,7 @@ from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP, SO_REUSEADDR, SOL_
 from cv2 import cv2
 import struct
 import pickle
+import subprocess 
 """
 UAV Server for exchanging data between raspberry PI and the ground station using socket programming
 
@@ -89,7 +90,7 @@ class UAV_SERVER(socket):
         print("UAV SERVER is in listening mode...")
         try:
             self.conn_image, self.FROM = self.accept() # accept 3 way hand shake for session establishment
-            self.settimeout(1.2)
+            self.settimeout(5)
             self.FROM = self.FROM[0]
             self.initialized = True
             print("3-way TCP Hand shake established with PI (" + self.FROM +") on port : " + str(PORT))    
@@ -99,13 +100,8 @@ class UAV_SERVER(socket):
         return
         
     def sendUAV(self, location):
-        self.connect(("127.0.0.1", 5500))
-        self.sendall(str(location).encode('utf-8'))
-        response = self.recv(1024)
-        if response == b"success":
-            self.close()
-        return True
-
+        #subprocess.run("python3 /home/farah/AI-UAVC/sendUAV/sender.py --location " + str(location))
+        pass
     def receiveMissions(self):
         image  = None
         payload_size = struct.calcsize(">L")
@@ -135,7 +131,7 @@ class UAV_SERVER(socket):
             self.initialized = False
             self.conn_image.close()
             print("Mission receiving failed due to : " + str(exception))
-            print("RE-establishing conn_imageection")
+            print("RE-establishing connection")
             while True:
                 try:
                     self.conn_image, self.FROM = self.accept()

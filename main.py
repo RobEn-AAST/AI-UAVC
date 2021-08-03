@@ -5,21 +5,25 @@ from geotag.geo import repeatedTarget
 import AlphanumericCharacterDetection.AlphaNumeric
 from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
 import Shape_Detection.darknet as dn
-
+from sendUAV.sender import UAVSOCK
 dn.load_model()
 server = UAV_SERVER()
+UAV = UAVSOCK("localhost", 5500)
 mission = {}
 detectedCount = 0
 terminate = True
 
 while terminate:
     terminate, location, img = server.receiveMissions()
+    if not terminate:
+        break
+    if location == None:
+        continue
     mission["latitude"], mission["longitude"] = location
 
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
-    if found :
+    if found and (not repeatedTarget(location)):
         detectedCount += 1
-        print(detectedCount)
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
 
@@ -28,7 +32,7 @@ while terminate:
         #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
 
         if objType == "Friend":
-            server.sendUAV(location)
+            UAV.sendUAV(location)
 print("finished")
 
 # TODO 
