@@ -14,13 +14,12 @@ terminate = True
 
 while terminate:
     terminate, location, img = server.receiveMissions()
-    if img is None:
-        continue
     mission["latitude"], mission["longitude"] = location
 
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
     if found :
-        detectedCount = detectedCount + 1
+        detectedCount += 1
+        print(detectedCount)
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
 
@@ -28,9 +27,9 @@ while terminate:
 
         #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
 
-        # if objType == "Friend":
-        #     server.sendUAV(location)
-
+        if objType == "Friend":
+            server.sendUAV(location)
+print("finished")
 
 # TODO 
 # nefok repeatedTarget and make it clear

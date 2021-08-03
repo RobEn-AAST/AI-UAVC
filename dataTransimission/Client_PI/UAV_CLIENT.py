@@ -45,55 +45,40 @@ class UAV_CLIENT(socket):
             self.initialized = True
             self.ADDRESS = ADDRESS
             self.PORT = PORT
-            self.settimeout(0.5)
+            self.settimeout(1.2)
         except ConnectionRefusedError as e:
             print("failed to establish connection due to : " + str(e))
             self.initialized = False
 
-    def sendMission(self, geolocation = None, image = None, islast= False):
+    def sendMission(self, geolocation = None, image = None, Finished= False):
         out = None
         try:
-            if islast:
-                img = np.zeros([512,512,1],dtype=np.uint8)
-                mission = {
-                    "geo" : "",
-                    "image" : img,
-                    "finished": True 
-                }
-            elif geolocation == None and image == None:
-                if len(self.Queue) == 0:
-                    return self.initialized
-                else:
-                    mission = self.Queue.pop(0)
-            else:
+            if not (geolocation == None and image == None):
                 _, frame = cv2.imencode('.jpg', image)
                 mission = {
                     "geo" : geolocation,
                     "image" : frame,
-                    "finished" : islast
+                    "finished" : Finished
                 }
-            if not self.initialized:
                 self.Queue.append(mission)
-                return True
-            if len(self.Queue) == 0:
-                #images sending as segements of 1KB length
-                Segments = pickle.dumps(mission, 0)
-            else:
-                self.Queue.append(mission)
+            try:
                 out = self.Queue.pop(0)
-                Segments = pickle.dumps(out, 0)
+            except:
+                return True
+            if not self.initialized:
+                if not (geolocation == None and image == None):
+                    self.Queue.append(mission)
+                return True
+            Segments = pickle.dumps(out, 0)
             SegmentsNumber = len(Segments)
             self.sendall(struct.pack(">L", SegmentsNumber) + Segments)
             response = self.recv(1024)
             if response == b'success':
                 print("success")
-            else:
-                raise Exception
+                return out["finished"]
         except Exception as exception:
-            if out is None:
-                self.Queue.append(mission)
-            else:
-                self.Queue.append(out)
+            print(exception)
+            self.Queue.append(out)
             self.close()
             self.initialized = False
             print("Connection failed due to : " + str(exception))
@@ -101,15 +86,15 @@ class UAV_CLIENT(socket):
             new_connection = ConnectionThread(self)
             new_connection.start()
         return True
-    
+                
     def endMission(self):
-        self.sendMission(geolocation= None, image=None, islast=True)
+        self.sendMission(geolocation = (0,0), image = np.zeros([512,512,1],dtype=np.uint8), Finished=True)
         self.clearQueue()
         self.initialized = False
     def clearQueue(self):
         end = True
         while end:
-            end = self.sendMission()
+            end = not self.sendMission()
 
     def __del__(self):
         self.close()
@@ -117,8 +102,8 @@ class UAV_CLIENT(socket):
     
 #Driver code to test the program
 if __name__ == '__main__':
-    #connection_string ='tcp:127.0.0.1:5760'
-    #vehicle = connect(connection_string, wait_ready=True)
+    connection_string ='tcp:127.0.0.1:5763'
+    vehicle = connect(connection_string, wait_ready=True)
     cap = cv2.VideoCapture(0)
     mysocket = UAV_CLIENT()
     # Get default camera window size
@@ -127,7 +112,7 @@ if __name__ == '__main__':
         if not ret:
             print("no feed")
             break
-        coordinates = (30.45, 34.5)
+        coordinates = (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon)
         print(coordinates)
         mysocket.sendMission(coordinates, frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
