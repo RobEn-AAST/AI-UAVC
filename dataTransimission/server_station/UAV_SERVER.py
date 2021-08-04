@@ -90,7 +90,7 @@ class UAV_SERVER(socket):
         print("UAV SERVER is in listening mode...")
         try:
             self.conn_image, self.FROM = self.accept() # accept 3 way hand shake for session establishment
-            self.settimeout(5)
+            self.conn_image.settimeout(1)
             self.FROM = self.FROM[0]
             self.initialized = True
             print("3-way TCP Hand shake established with PI (" + self.FROM +") on port : " + str(PORT))    
@@ -109,21 +109,21 @@ class UAV_SERVER(socket):
             string = b""
             while len(string) < payload_size:
                 bits = self.conn_image.recv(4096)
-                if bits == b'':
-                    raise Exception
                 string += bits
             packed_msg_size = string[:payload_size]
             data = string[payload_size:]
             msg_size = struct.unpack(">L", packed_msg_size)[0]
             while len(data) < msg_size:
                 bits = self.conn_image.recv(4096)
+                if bits == b'':
+                    raise Exception
                 data += bits
             frame_data = data[:msg_size]
             data = data[msg_size:]
             mission = pickle.loads(frame_data, fix_imports=True, encoding="bytes")
             if mission["finished"]:
                 return False,None,None
-            image=cv2.resize(cv2.imdecode(mission["image"], cv2.IMREAD_COLOR),(250,250))
+            image=cv2.resize(cv2.imdecode(mission["image"], cv2.IMREAD_COLOR),(1440,1080))
             geolocation = mission["geo"]
             self.conn_image.sendall(b"success")
             return True,geolocation, image
@@ -135,6 +135,7 @@ class UAV_SERVER(socket):
             while True:
                 try:
                     self.conn_image, self.FROM = self.accept()
+                    self.conn_image.settimeout(1)
                     break
                 except Exception:
                     continue

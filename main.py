@@ -12,16 +12,19 @@ UAV = UAVSOCK("localhost", 5500)
 mission = {}
 detectedCount = 0
 terminate = True
-
+counter = 0
 while terminate:
     terminate, location, img = server.receiveMissions()
     if not terminate:
         break
     if location == None:
         continue
-    mission["latitude"], mission["longitude"] = location
-    objType, imageResult, croppedTarget, found, lat, lon = dn.detectShape(img)
-    location = lat + location[0], lon + location[1]
+    print("img" + str(counter) + "found")
+    cv2.imwrite("test/img" + str(counter) + ".jpg", img)
+    counter +=1
+    mission["latitude"], mission["longitude"], altitude = location
+    objType, imageResult, croppedTarget, found = dn.detectShape(img)
+    # location = lat + location[0], lon + location[1]
     # cv2.imwrite("results.jpg",imageResult)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1

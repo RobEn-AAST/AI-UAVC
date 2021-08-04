@@ -46,7 +46,7 @@ class UAV_CLIENT(socket):
             self.initialized = True
             self.ADDRESS = ADDRESS
             self.PORT = PORT
-            self.settimeout(1.2)
+            self.settimeout(2)
         except ConnectionRefusedError as e:
             print("failed to establish connection due to : " + str(e))
             self.initialized = False
@@ -105,7 +105,7 @@ class UAV_CLIENT(socket):
 if __name__ == '__main__':
     connection_string ='/dev/ttyACM0'
     vehicle = mavutil.mavlink_connection(device=connection_string, baud=57600)
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture('home/pi/MAH00145.MP4')
     mysocket = UAV_CLIENT(ADDRESS = "192.168.1.56")
     # Get default camera window size
     while True:
@@ -113,8 +113,7 @@ if __name__ == '__main__':
         if not ret:
             print("no feed")
             break
-        coordinates = (vehicle.location.global_frame.lat, vehicle.location.global_frame.lon)
-        print(coordinates)
+        coordinates = tuple(map(float, str(vehicle.location().split(","))))
         mysocket.sendMission(coordinates, frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
