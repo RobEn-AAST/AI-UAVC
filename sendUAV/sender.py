@@ -14,7 +14,7 @@ class UAVSOCK() :
         self.socket.connect((self.IP, self.PORT))
 
     def sendUAV(self, loc):
-        loc  = str(loc)
+        loc  = str(loc)[1:-1]
         self.connect()
         data = f"{len(loc):<{self.HEADERSIZE}}" + loc
         codedMsg = bytes(data, "utf-8")

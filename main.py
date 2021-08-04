@@ -20,19 +20,12 @@ while terminate:
     if location == None:
         continue
     mission["latitude"], mission["longitude"] = location
-<<<<<<< HEAD
-
-    objType, imageResult, croppedTarget, found = dn.detectShape(img)
-    if found and (not repeatedTarget(location)):
-        detectedCount += 1
-=======
     objType, imageResult, croppedTarget, found, lat, lon = dn.detectShape(img)
     location = lat + location[0], lon + location[1]
     # cv2.imwrite("results.jpg",imageResult)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
         print(detectedCount)
->>>>>>> a5b69235e81459192ed488577aa84bbb10f798f2
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
 
@@ -40,8 +33,8 @@ while terminate:
 
         #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
 
-        if objType == "Friend":
-            UAV.sendUAV(location)
+        # if objType == "Friend":
+        #     UAV.sendUAV(location)
 print("finished")
 
 # TODO 

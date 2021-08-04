@@ -7,7 +7,8 @@ import struct
 from threading import Thread, Lock
 import numpy as np
 from dronekit import connect
-
+import pymavlink
+from pymavlink import mavutil
 
 ConnectionThreadLock = Lock()
 class ConnectionThread(Thread): #A thread for maintaning a redundant connection
@@ -102,10 +103,10 @@ class UAV_CLIENT(socket):
     
 #Driver code to test the program
 if __name__ == '__main__':
-    connection_string ='tcp:127.0.0.1:5763'
-    vehicle = connect(connection_string, wait_ready=True)
+    connection_string ='/dev/ttyACM0'
+    vehicle = mavutil.mavlink_connection(device=connection_string, baud=57600)
     cap = cv2.VideoCapture(0)
-    mysocket = UAV_CLIENT()
+    mysocket = UAV_CLIENT(ADDRESS = "192.168.1.56")
     # Get default camera window size
     while True:
         ret, frame = cap.read()
