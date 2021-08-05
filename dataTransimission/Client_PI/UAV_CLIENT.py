@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP
+from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP, SOL_SOCKET, SO_REUSEADDR
 from cv2 import cv2
 from time import sleep
 import pickle
@@ -36,6 +36,7 @@ class UAV_CLIENT(socket):
         """
         self.Queue = []
         super().__init__(AF_INET, SOCK_STREAM, IPPROTO_TCP)
+        self.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         try:
             while True:
                 try:
@@ -81,7 +82,7 @@ class UAV_CLIENT(socket):
             logging.INFO("RE-establishing connection")
             new_connection = ConnectionThread(self)
             new_connection.start()
-        return True
+        return out["finished"]
                 
     def endMission(self):
         self.sendMission(geolocation = (0,0), image = np.zeros([512,512,1],dtype=np.uint8), Finished=True)
@@ -98,7 +99,7 @@ class UAV_CLIENT(socket):
     
 #Driver code to test the program
 if __name__ == '__main__':
-    logging.basicConfig(filename= 'AIclient.log', filemode= 'w', format= datetime.now().strftime("%d/%m/%Y %H:%M:%S") +' : %(levelname)s : %(message)s')
+    logging.basicConfig(filename= 'AIclient.log', filemode= 'w',format='%(asctime)s-%(levelname)s-%(message)s')
     connection_string ='/dev/ttyACM0'
     logging.INFO("Connecting to PIX-HAWK on internal port= " + connection_string + " with baud= 57600")
     vehicle = mavlink_connection(device= connection_string, baud= 57600)

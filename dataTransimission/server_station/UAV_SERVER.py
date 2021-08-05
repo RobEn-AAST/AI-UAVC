@@ -1,4 +1,4 @@
-from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP
+from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP, SOL_SOCKET, SO_REUSEADDR
 from cv2 import cv2
 import struct
 import pickle
@@ -83,12 +83,13 @@ class UAV_SERVER(socket):
             Communication port (default is 5000)
         """
         super().__init__(AF_INET, SOCK_STREAM, IPPROTO_TCP)
+        self.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         self.bind(("", PORT))
         self.listen()
         print("UAV SERVER is in listening mode...")
         try:
             self.conn_image, self.FROM = self.accept() # accept 3 way hand shake for session establishment
-            self.conn_image.settimeout(1)
+            self.conn_image.settimeout(5)
             self.FROM = self.FROM[0]
             self.initialized = True
             print("3-way TCP Hand shake established with PI (" + self.FROM +") on port : " + str(PORT))    

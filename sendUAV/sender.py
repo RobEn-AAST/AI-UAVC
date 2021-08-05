@@ -12,18 +12,15 @@ class UAVSOCK(socket) :
         self.IP = ip
         while True:
             try:
-                print("connecting")
                 self.connect((self.IP, self.PORT)) # attempt 3 way hand shake for session establishment
-                print("connection accepted")
                 self.settimeout(5)
                 break
             except Exception as exception:
-                print(exception)
                 sleep(0.1)
                 continue
 
     def sendUAV(self, loc):
-        loc = loc[1:-1]
+        loc = str(loc)[1:-1]
         while True:
             try:
                 Segments = pickle.dumps(loc, 0)

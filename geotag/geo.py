@@ -19,7 +19,6 @@ def repeatedTarget(loc):
       d =c * r
       
       if d < 0.3 :
-         print(f"geotag distance = {d} from past location so it is repeated")
          return True
 
    with open('geotags.json','w') as f:

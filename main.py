@@ -10,7 +10,7 @@ from dataTransimission.server_station.interop import interop_client
 
 dn.load_model()
 server = UAV_SERVER()
-UAV = UAVSOCK("192.168.1.44", 5500)
+UAV = UAVSOCK("127.0.0.1", 5500)
 mission = {}
 detectedCount = 0
 terminate = True
@@ -65,7 +65,6 @@ while terminate:
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
-        print(detectedCount)
         mission["type"] = objType
         mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
 
@@ -75,12 +74,5 @@ while terminate:
 
         if objType == "Friend":
             UAV.sendUAV(location)
-print("finished")
 
-# TODO 
-# nefok repeatedTarget and make it clear
-# get exact timeout for sleep from UAV team
-# talk about interop with UAV
-# make sure connection string on PI is set correctly
-# talk about sockets in sendUAV with emad
-# ask emad which image to save (cropped or original) = original
+print("finished")
