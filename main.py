@@ -1,4 +1,3 @@
-import cv2
 from numpy.core.fromnumeric import ptp
 from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
@@ -6,13 +5,15 @@ import AlphanumericCharacterDetection.AlphaNumeric
 from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
 import Shape_Detection.darknet as dn
 from sendUAV.sender import UAVSOCK
+from dataTransimission.server_station.interop import interop_client
+
+
 dn.load_model()
 server = UAV_SERVER()
-UAV = UAVSOCK("localhost", 5500)
+UAV = UAVSOCK("192.168.1.44", 5500)
 mission = {}
 detectedCount = 0
 terminate = True
-counter = 0
 print('''                                                                                                     
 RRRRRRRRRRRRRRRRR                    BBBBBBBBBBBBBBBBB                                                
 R::::::::::::::::R                   B::::::::::::::::B                                               
@@ -60,13 +61,8 @@ while terminate:
         break
     if location == None:
         continue
-    print("img" + str(counter) + "found")
-    cv2.imwrite("test/img" + str(counter) + ".jpg", img)
-    counter +=1
     mission["latitude"], mission["longitude"], altitude = location
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
-    # location = lat + location[0], lon + location[1]
-    # cv2.imwrite("results.jpg",imageResult)
     if found and (not repeatedTarget(location)):
         detectedCount = detectedCount + 1
         print(detectedCount)
@@ -77,8 +73,8 @@ while terminate:
 
         #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
 
-        # if objType == "Friend":
-        #     UAV.sendUAV(location)
+        if objType == "Friend":
+            UAV.sendUAV(location)
 print("finished")
 
 # TODO 

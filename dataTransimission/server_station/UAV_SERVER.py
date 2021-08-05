@@ -1,8 +1,7 @@
-from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP, SO_REUSEADDR, SOL_SOCKET
+from socket import socket, AF_INET, SOCK_STREAM, IPPROTO_TCP
 from cv2 import cv2
 import struct
 import pickle
-import subprocess 
 """
 UAV Server for exchanging data between raspberry PI and the ground station using socket programming
 
@@ -84,7 +83,6 @@ class UAV_SERVER(socket):
             Communication port (default is 5000)
         """
         super().__init__(AF_INET, SOCK_STREAM, IPPROTO_TCP)
-        self.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         self.bind(("", PORT))
         self.listen()
         print("UAV SERVER is in listening mode...")
@@ -115,8 +113,6 @@ class UAV_SERVER(socket):
             msg_size = struct.unpack(">L", packed_msg_size)[0]
             while len(data) < msg_size:
                 bits = self.conn_image.recv(4096)
-                if bits == b'':
-                    raise Exception
                 data += bits
             frame_data = data[:msg_size]
             data = data[msg_size:]
