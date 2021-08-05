@@ -11,7 +11,7 @@ import logging
 from datetime import datetime
 
 ConnectionThreadLock = Lock()
-class ConnectionThread(Thread): #A thread for maintaning a redundant connection
+class ConnectionThread(Thread):
     def __init__(self,socket : socket):
         Thread.__init__(self)
         self.socket = socket
@@ -53,7 +53,6 @@ class UAV_CLIENT(socket):
             self.initialized = False
 
     def sendMission(self, geolocation = None, image = None, Finished= False):
-        out = None
         try:
             if not (geolocation == None and image == None):
                 _, frame = cv2.imencode('.jpg', image)
@@ -63,7 +62,7 @@ class UAV_CLIENT(socket):
                     "finished" : Finished
                 }
                 self.Queue.append(mission)
-                out = self.Queue.pop(0)
+            out = self.Queue.pop(0)
             if not self.initialized:
                 if not (geolocation == None and image == None):
                     self.Queue.append(mission)
@@ -75,12 +74,11 @@ class UAV_CLIENT(socket):
             if response == b'success':
                 return out["finished"]
         except Exception as exception:
-            print(exception)
             self.Queue.append(out)
             self.close()
             self.initialized = False
             logging.WARNING("Connection failed due to : " + str(exception))
-            print("RE-establishing connection")
+            logging.INFO("RE-establishing connection")
             new_connection = ConnectionThread(self)
             new_connection.start()
         return True
