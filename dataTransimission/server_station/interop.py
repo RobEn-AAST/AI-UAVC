@@ -78,7 +78,13 @@ class interop_client:
         object_of_interset.longitude = mission["longitude"]
         object_of_interset.alphanumeric = mission["alphanumeric"]
         object_of_interset.autonomous = True
-        object_of_interset.mission = mission
+        object_of_interset.mission = id
+        if mission["type"] == "Friend":
+            object_of_interset.shape_color = interop_api_pb2.Odlc.RED
+        else:
+            object_of_interset.shape_color = interop_api_pb2.Odlc.BLUE
+        object_of_interset.alphanumeric_color = interop_api_pb2.Odlc.WHITE
+        object_of_interset.shape = interop_api_pb2.Odlc.SQUARE
         object_of_interset = self.__this_client.post_odlc(object_of_interset)
         photo = gpsphoto.GPSPhoto(imagePath)
         info = gpsphoto.GPSInfo((mission["latitude"], mission["longitude"]))
