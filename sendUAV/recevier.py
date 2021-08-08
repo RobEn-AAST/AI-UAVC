@@ -3,13 +3,11 @@ import struct
 import pickle
 
 class ServerSock(socket):
-    HEADERSIZE = 20
 
-    def __init__(self, IP, PORT):
+    def __init__(self, PORT):
         super().__init__(AF_INET, SOCK_STREAM, IPPROTO_TCP)
         self.bind(("", PORT))
         self.listen()
-        print("Listening on " + str(IP) + ":" + str(PORT))
         
     def getMessage(self):
         payload_size = struct.calcsize(">L")
@@ -39,10 +37,9 @@ class ServerSock(socket):
 
 if __name__ == "__main__":
 
-    server = ServerSock("localhost", 5500)
+    server = ServerSock(5500)
     while True:
         print(server.getMessage())
 
 
     
-
