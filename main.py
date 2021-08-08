@@ -10,7 +10,7 @@ from dataTransimission.server_station.interop import interop_client
 
 dn.load_model()
 server = UAV_SERVER()
-UAV = UAVSOCK("127.0.0.1", 5500)
+UAV = UAVSOCK(5500)
 mission = {}
 detectedCount = 0
 terminate = True
