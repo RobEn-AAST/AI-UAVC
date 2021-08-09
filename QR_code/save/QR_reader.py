@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 #path is the folder in which the QR code's are at
-path = 'Classes'
+path = 'QR_code/save/Classes'
 #images is a list that contains all the images in the path file
 images = []
 #class names is a list that contains the class names
@@ -29,7 +29,7 @@ def reader(img):
     bf = cv2.BFMatcher()
 
 
-    print("total classes detected", len(myList))
+    # print("total classes detected", len(myList))
     #this loop adds the class names which are basically the image names without their extensions
     for c1 in myList:
         imgCur = cv2.imread(f"{path}/{c1}")
@@ -52,12 +52,13 @@ def reader(img):
         if len(good)> max_conf:
             max_conf = len(good)
             j = myList.index(i)
-        print(len(good))
+        # print(len(good))
     #here I return a string conatining the class name with the highest matches
-    return classNames[j]
+    return "5" if max_conf < 15 else classNames[j]
+    # return classNames[j]
 
 #here I call the import the image
-img = cv2.imread("test2.jpeg")
-#I print the result of the reader function
-print(f"Class: {reader(img)}")
+# img = cv2.imread("test2.jpeg")
+# #I print the result of the reader function
+# print(f"Class: {reader(img)}")
         

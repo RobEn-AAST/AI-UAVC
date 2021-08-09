@@ -5,7 +5,7 @@ from dataTransimission.server_station.UAV_SERVER import UAV_SERVER
 import Shape_Detection.darknet as dn
 from sendUAV.sender import UAVSOCK
 from dataTransimission.server_station.interop import interop_client
-
+from QR_code.save import QR_reader
 
 dn.load_model()
 server = UAV_SERVER()
@@ -37,8 +37,6 @@ R::::::R     R:::::R oo:::::::::::oo B::::::::::::::::B    ee:::::::::::::e    n
 RRRRRRRR     RRRRRRR   ooooooooooo   BBBBBBBBBBBBBBBBB       eeeeeeeeeeeeee    nnnnnn    nnnnnn       
                                                                                                       
                                                                                                       
-                                                                                                      
-
 UUUUUUUU     UUUUUUUU               AAA               VVVVVVVV           VVVVVVVV        CCCCCCCCCCCCC
 U::::::U     U::::::U              A:::A              V::::::V           V::::::V     CCC::::::::::::C
 U::::::U     U::::::U             A:::::A             V::::::V           V::::::V   CC:::::::::::::::C
@@ -71,7 +69,7 @@ while terminate:
 			print("An object of interest has been detected")
 			detectedCount = detectedCount + 1
 			mission["type"] = objType
-			# mission["alphanumeric"] = emadJunior function
+			mission["alphanumeric"] = QR_reader.reader(img)
 			print(f"letter of object{detectedCount} identification successfull")
 			imagePath = submitToUSB(mission, imageResult,detectedCount)
 			print(f"object {detectedCount} submitted on usb")
