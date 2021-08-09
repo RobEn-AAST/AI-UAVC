@@ -356,30 +356,23 @@ def one_detection_to_points(detections):
 def detectShape(frame):
     image, detection = predict_rFullImage(frame)
     
-    if detection.__len__()>0:
-        detection = detection[0]
-    else:
+    if detection.__len__()==0:
         return "", frame, empty, False
 
-    label = detection[0]
-    # confidence = detection[1]
-    # bbox = detection[2]
-    # xc, yc, w, h = bbox
-    # distance_x_from_center = (1440/2 - xc)
-    # distance_y_from_center = (1080/2 - yc)
-    # # print(objType)
-    # meters_x_from_center = distance_x_from_center * 53 / 0.9 
-    # meters_y_from_center = distance_y_from_center * 53 / 0.9 
-    # lat, lon = meters_x_from_center * 6.53399049567 / 120 , meters_y_from_center * 6.53399049567 / 120
+    label = []
+    image = []
+    crop = []
 
-    Found = False
-    if label is not None:
-        Found = True
+    for det in detection:
+        label.append(det[0])
+        image.append(cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
+        crop.append(get_cropped_image(image, detection))
     
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    crop, count = get_cropped_image(image, detection)
+    # label = detection[0]
+    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # crop, count = get_cropped_image(image, detection)
 
-    return label, image, crop, Found
+    return label, image, crop, True
 
 
 if __name__ == "__main__":
