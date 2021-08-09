@@ -17,6 +17,7 @@ print("interop system online")
 mission = {}
 detectedCount = 0
 terminate = True
+
 print('''                                                                                                     
 RRRRRRRRRRRRRRRRR                    BBBBBBBBBBBBBBBBB                                                
 R::::::::::::::::R                   B::::::::::::::::B                                               
@@ -34,8 +35,6 @@ RR:::::R     R:::::Ro:::::ooooo:::::oBB:::::BBBBBB::::::Be::::::::e            n
 R::::::R     R:::::Ro:::::::::::::::oB:::::::::::::::::B  e::::::::eeeeeeee    n::::n    n::::n       
 R::::::R     R:::::R oo:::::::::::oo B::::::::::::::::B    ee:::::::::::::e    n::::n    n::::n       
 RRRRRRRR     RRRRRRR   ooooooooooo   BBBBBBBBBBBBBBBBB       eeeeeeeeeeeeee    nnnnnn    nnnnnn       
-                                                                                                      
-                                                                                                      
                                                                                                       
                                                                                                       
                                                                                                       
@@ -58,26 +57,28 @@ UU:::::U     U:::::UU            A:::::::A            V::::::V           V::::::
       UUUUUUUUU      AAAAAAA                   AAAAAAA            VVV                    CCCCCCCCCCCCC
 ''')
 print("mission sequence initiated")
+
 while terminate:
-    terminate, location, img = server.receiveMissions()
-    if not terminate:
-        break
-    if location == None:
-        continue
-    mission["latitude"], mission["longitude"], altitude = location
-    objType, imageResult, croppedTarget, found = dn.detectShape(img)
-    if found and (not repeatedTarget(location)):
-      print("An object of interest has been detected")
-      detectedCount = detectedCount + 1
-      mission["type"] = objType
-      mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
-      print("letter identification successfull")
-      imagePath = submitToUSB(mission, imageResult,detectedCount)
-      print("object submitted on usb")
-      #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
-      print("object submitted on the interop system")
-      if objType == "Friend":
-        UAV.sendUAV(location)
-        print("Friend object location has been sent to UAV successfully")
+	terminate, location, img = server.receiveMissions()
+	if not terminate:
+		break
+	if location == None:
+		continue
+	mission["latitude"], mission["longitude"], altitude = location
+	objTypes, imageResults, croppedTargets, found = dn.detectShape(img)
+	if found and (not repeatedTarget(location)):
+		for objType,imageResult,croppedTarget in zip(objTypes, imageResults, croppedTargets):
+			print("An object of interest has been detected")
+			detectedCount = detectedCount + 1
+			mission["type"] = objType
+			# mission["alphanumeric"] = emadJunior function
+			print(f"letter of object{detectedCount} identification successfull")
+			imagePath = submitToUSB(mission, imageResult,detectedCount)
+			print(f"object {detectedCount} submitted on usb")
+			#submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
+			print("object {detectedCount} submitted on the interop system")
+			if objType == "Friend":
+				UAV.sendUAV(location)
+				print("Friend object location has been sent to UAV successfully")
 
 print("Streaming finished")
