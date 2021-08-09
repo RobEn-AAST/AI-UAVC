@@ -5,7 +5,6 @@ from .interop_library.auvsi_suas.proto import interop_api_pb2
 from urllib import request
 from re import findall
 import functools
-from cv2 import imwrite
 from PIL.ExifTags import TAGS
 from PIL import Image
 from GPSPhoto import gpsphoto

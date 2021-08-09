@@ -19,7 +19,7 @@ class ConnectionThread(Thread):
     def run(self):
         ConnectionThreadLock.acquire()
         self.socket.__init__(ADDRESS = self.socket.ADDRESS)
-        logging.WARNING("Connection regained")
+        logging.warning("Connection regained")
         ConnectionThreadLock.release()
 
 
@@ -50,7 +50,7 @@ class UAV_CLIENT(socket):
             self.PORT = PORT
             self.settimeout(2)
         except ConnectionRefusedError as e:
-            logging.WARNING("Failed to establish connection due to : " + str(e))
+            logging.warning("Failed to establish connection due to : " + str(e))
             self.initialized = False
 
     def sendMission(self, geolocation = None, image = None, Finished= False):
@@ -63,6 +63,8 @@ class UAV_CLIENT(socket):
                     "finished" : Finished
                 }
                 self.Queue.append(mission)
+            if len(self.Queue) == 0:
+                return True
             out = self.Queue.pop(0)
             if not self.initialized:
                 if not (geolocation == None and image == None):
@@ -78,8 +80,8 @@ class UAV_CLIENT(socket):
             self.Queue.append(out)
             self.close()
             self.initialized = False
-            logging.WARNING("Connection failed due to : " + str(exception))
-            logging.INFO("RE-establishing connection")
+            logging.warning("Connection failed due to : " + str(exception))
+            logging.info("RE-establishing connection")
             new_connection = ConnectionThread(self)
             new_connection.start()
         return out["finished"]
@@ -101,29 +103,29 @@ class UAV_CLIENT(socket):
 if __name__ == '__main__':
     logging.basicConfig(filename= 'AIclient.log', filemode= 'w',format='%(asctime)s-%(levelname)s-%(message)s')
     connection_string ='/dev/ttyACM0'
-    logging.INFO("Connecting to PIX-HAWK on internal port= " + connection_string + " with baud= 57600")
+    logging.info("Connecting to PIX-HAWK on internal port= " + connection_string + " with baud= 57600")
     vehicle = mavlink_connection(device= connection_string, baud= 57600)
-    logging.INFO("The PIX-HAWK has been connected successfully")
-    logging.INFO("Connecting to the ground station on ADDRESS=192.168.1.56 and PORT= 5000")
+    logging.info("The PIX-HAWK has been connected successfully")
+    logging.info("Connecting to the ground station on ADDRESS=192.168.1.56 and PORT= 5000")
     mysocket = UAV_CLIENT(ADDRESS = "192.168.1.56")
-    logging.INFO("The ground station has been connected successfully")
+    logging.info("The ground station has been connected successfully")
     cap = cv2.VideoCapture('home/pi/MAH00145.MP4')
-    logging.INFO("Camera stream has been captured")
+    logging.info("Camera stream has been captured")
     # Get default camera window size
     while True:
         ret, frame = cap.read()
         if not ret:
-            logging.INFO("Stream ended")
+            logging.info("Stream ended")
             break
         coordinates = vehicle.location()
         geolocation = coordinates.split(",")
         geolocation = map(lambda x : float(x[4:]), coordinates)
         coordinates = list(coordinates)
         mysocket.sendMission(coordinates, frame)
-        logging.INFO("Frame with location= { " + coordinates + " } has been sent to the ground station")
+        logging.info("Frame with location= { " + coordinates + " } has been sent to the ground station")
         sleep(0.1)
     cap.release()
-    logging.INFO("Camera stream has been released")
-    logging.INFO("Ending the mission")
+    logging.info("Camera stream has been released")
+    logging.info("Ending the mission")
     mysocket.endMission()
-    logging.INFO("Program exited with no errors")
+    logging.info("Program exited with no errors")

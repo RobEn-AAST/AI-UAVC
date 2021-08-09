@@ -1,4 +1,3 @@
-from numpy.core.fromnumeric import ptp
 from WriteJsonOnDisk.jsonFile import submitToUSB
 from geotag.geo import repeatedTarget
 import AlphanumericCharacterDetection.AlphaNumeric
@@ -10,7 +9,11 @@ from dataTransimission.server_station.interop import interop_client
 
 dn.load_model()
 server = UAV_SERVER()
-UAV = UAVSOCK(5500)
+print("PI socket online")
+UAV = UAVSOCK("192.168.0.44", 5500)
+print("payload delivery socket online")
+interop = interop_client("", "8000", "testuser", "testpass")
+print("interop system online")
 mission = {}
 detectedCount = 0
 terminate = True
@@ -54,7 +57,7 @@ UU:::::U     U:::::UU            A:::::::A            V::::::V           V::::::
     UU:::::::::UU     A:::::A                 A:::::A            V:::V                CCC::::::::::::C
       UUUUUUUUU      AAAAAAA                   AAAAAAA            VVV                    CCCCCCCCCCCCC
 ''')
-
+print("mission sequence initiated")
 while terminate:
     terminate, location, img = server.receiveMissions()
     if not terminate:
@@ -64,15 +67,17 @@ while terminate:
     mission["latitude"], mission["longitude"], altitude = location
     objType, imageResult, croppedTarget, found = dn.detectShape(img)
     if found and (not repeatedTarget(location)):
-        detectedCount = detectedCount + 1
-        mission["type"] = objType
-        mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
+      print("An object of interest has been detected")
+      detectedCount = detectedCount + 1
+      mission["type"] = objType
+      mission["alphanumeric"] = AlphanumericCharacterDetection.AlphaNumeric.getAlphaNumeric(croppedTarget)[0][0]
+      print("letter identification successfull")
+      imagePath = submitToUSB(mission, imageResult,detectedCount)
+      print("object submitted on usb")
+      #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
+      print("object submitted on the interop system")
+      if objType == "Friend":
+        UAV.sendUAV(location)
+        print("Friend object location has been sent to UAV successfully")
 
-        imagePath = submitToUSB(mission, imageResult,detectedCount)
-
-        #submitToJudge(mission, imagePath) # DevOps TODO: finish interop wrapping
-
-        if objType == "Friend":
-            UAV.sendUAV(location)
-
-print("finished")
+print("Streaming finished")
