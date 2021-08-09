@@ -354,7 +354,7 @@ def one_detection_to_points(detections):
 
 
 def detectShape(frame):
-    image, detection = predict_rFullImage(frame)
+    imageboxed, detection = predict_rFullImage(frame)
     
     if detection.__len__()==0:
         return "", frame, empty, False
@@ -365,8 +365,9 @@ def detectShape(frame):
 
     for det in detection:
         label.append(det[0])
-        image.append(cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
-        crop.append(get_cropped_image(image, detection))
+        fixed = cv2.cvtColor(imageboxed, cv2.COLOR_RGB2BGR)
+        image.append(fixed)
+        crop.append(get_cropped_image(fixed, det))
     
     # label = detection[0]
     # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -383,7 +384,7 @@ if __name__ == "__main__":
 
     
     # vid = cv2.VideoCapture('testvideos/MAH00145.MP4')
-    vid = cv2.VideoCapture('testvideos/MAH00155.MP4')
+    vid = cv2.VideoCapture('/home/farah/AI-UAVC/Shape_Detection/testvideos/MAH00155.MP4')
     ret = True
     while(True):
         ret, frame = vid.read()
@@ -395,14 +396,21 @@ if __name__ == "__main__":
         print(detection)
         print(time.process_time() - start)
         
+        if (detectShape(frame).__len__()==0):
+            continue
         
-        label, image, cropped, Found = detectShape(frame)
-
-        cv2.imshow('frame', image)
         try:
-            cv2.imshow('frame2', cropped)
-        except Exception:
-            pass
+            label, image, cropped, Found = detectShape(frame)
+            
+            cv2.imshow('frame', image)
+                
+            try:
+                cv2.imshow('frame2', cropped)
+            except Exception:
+                pass
+        
+        except Exception as e:
+            continue
         print(label, Found)
 
         # crop, count = get_cropped_images_array(image, detection)
